@@ -1,0 +1,185 @@
+.signup-form {
+  transition: all 0.4s ease;
+  width: 100%;
+  max-width: calc((346 / 16) * 1rem);
+}
+
+/* WRAPPER FOR THE WHOLE INPUT FIELD (INPUT + LABEL) */
+
+.signup-field {
+  position: relative;
+  min-height: calc((70 / 16) * 1rem);
+  width: 100%;
+  color: white;
+  overflow: hidden;
+  /* border: 2px solid red; */
+  margin-top: calc((15 / 16) * 1rem);
+}
+
+/* INPUT ITSELF  */
+
+.signup-field input {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  color: white;
+  line-height: calc((62 / 16) * 1rem);
+  outline: 0;
+  font-size: calc((20 / 16) * 1rem);
+  background-color: inherit;
+  padding-top: calc((30 / 16) * 1rem);
+  padding-bottom: calc((15 / 16) * 1rem);
+  border: none;
+  box-sizing: border-box;
+  font-family: "Mulish", sans-serif;
+}
+
+.signup-field input::placeholder {
+  opacity: 0;
+}
+
+/* LABEL TEXT  */
+
+.signup-field-label-wrapper {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: inherit;
+  bottom: 0;
+  left: 0;
+  pointer-events: none;
+  border-bottom: 1px solid white;
+  /* border: 1px solid yellow; */
+}
+
+.signup-field-label-text {
+  position: absolute;
+  bottom: calc((10 / 16) * 1rem);
+  left: 0px;
+  transition: all 0.6s;
+  transform: translateY(0%);
+  font-size: calc((20 / 16) * 1rem);
+}
+
+/* WHEN INPUT IS CLICKED AND PLACEHOLDER IS SHOWN (USER HAS NOT ENTERED ANY VALUE YET)
+, LABEL TEXT MOVES UP  */
+
+.signup-field
+  input:focus
+  + .signup-field-label-wrapper
+  .signup-field-label-text,
+.signup-field
+  input:not(:placeholder-shown)
+  + .signup-field-label-wrapper
+  .signup-field-label-text {
+  font-size: calc((13 / 16) * 1rem);
+  transform: translateY(-225%);
+}
+
+/* SUBMIT BUTTON  */
+
+.signup-form > input {
+  padding: 1rem;
+  background-color: #00070d;
+  border: none;
+  color: white;
+  transition: all 0.4s ease;
+  cursor: pointer;
+  font-size: calc((18 / 16) * 1rem);
+  font-family: "Mulish", sans-serif;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: calc((1 / 16) * 1rem);
+  border-radius: calc((10 / 16) * 1rem);
+  margin-top: calc((30 / 16) * 1rem);
+  width: 100%;
+}
+
+.signup-form > input:hover {
+  background-color: #0a1f35;
+}
+
+.signup-form > input:active {
+  transform: scale(0.98);
+}
+.signup-form-terms {
+  font-size: calc((14 / 16) * 1rem) !important;
+  margin-top: calc((15 / 16) * 1rem);
+}
+
+.signup-form-terms button {
+  background-color: transparent;
+  color: white;
+  text-decoration: underline;
+  cursor: pointer;
+  border: transparent;
+}
+
+/* ERROR  */
+
+.signup-error-container {
+  /* border: 1px solid red; */
+  overflow: hidden;
+}
+
+.signup-error-message {
+  padding-top: calc((7 / 16) * 1rem);
+  font-size: calc((13 / 16) * 1rem) !important;
+  letter-spacing: calc((0.75 / 16) * 1rem);
+  color: #fe8787;
+  text-align: right;
+}
+
+.signup-error-sign {
+  position: absolute;
+  bottom: calc((10 / 16) * 1rem);
+  right: 0;
+  background-color: #fe8787;
+  border-radius: 50%;
+  padding: calc((3 / 16) * 1rem) calc((11 / 16) * 1rem);
+  aspect-ratio: 1/1;
+  font-weight: 600;
+  display: grid;
+  place-items: center;
+}
+
+@media only screen and (max-width: 600px) {
+  .signup-form > input {
+    font-size: 1rem;
+    padding: 1rem 1.25rem;
+  }
+}
+
+
+/* Floating Placeholder Style */
+.floating-placeholder {
+  position: absolute;
+  top: 50%; /* Position the label in the center initially */
+  left: 12px;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #aaa; /* Default placeholder color */
+  transition: all 0.2s ease-in-out; /* Smooth transition */
+}
+
+.input-wrapper {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+input:focus + .floating-placeholder,
+input:not(:placeholder-shown) + .floating-placeholder {
+  top: -10px; /* Move it upwards when focused or contains text */
+  left: 10px; /* Adjust left to give padding */
+  font-size: 12px; /* Shrink font size */
+  color: #4A90E2; /* Change to blue when focused or filled */
+}
+
+input:focus {
+  border-color: #4A90E2; /* Optional: Change border color when focused */
+}
+
+/* Optional styling for the label */
+.floating-placeholder {
+  pointer-events: none; /* Ensure the label is not clickable, only the input */
+}

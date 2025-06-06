@@ -3,16 +3,14 @@ import Navbar from '../Pages/Shared/Components/Navbar';
 import { Outlet } from 'react-router';
 import Footer from '../Pages/Shared/Components/Footer';
 
-const RootLayouts = () => {
+const AuthLayout = () => {
     return (
         <div>
-            <header className='z-10'>
-                <Navbar></Navbar>
-            </header>
+            <Navbar></Navbar>
             <Outlet></Outlet>
             <Footer></Footer>
         </div>
     );
 };
 
-export default RootLayouts;
+export default AuthLayout;

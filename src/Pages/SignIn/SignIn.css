@@ -1,0 +1,33 @@
+/* Custom CSS for floating placeholders */
+.input-wrapper {
+    position: relative;
+    margin-bottom: 16px;
+}
+
+.floating-placeholder {
+    position: absolute;
+    top: 50%; /* Position the label in the center initially */
+    left: 12px;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #aaa; /* Default placeholder color */
+    transition: all 0.2s ease-in-out; /* Smooth transition */
+}
+
+/* When the input is focused or contains text */
+input:focus + .floating-placeholder,
+input:not(:placeholder-shown) + .floating-placeholder {
+    top: -10px; /* Move it upwards when focused or contains text */
+    left: 10px; /* Adjust left to give padding */
+    font-size: 12px; /* Shrink font size */
+    color: #4A90E2; /* Change to blue when focused or filled */
+}
+
+input:focus {
+    border-color: #4A90E2; /* Optional: Change border color when focused */
+}
+
+/* Optional styling for the label */
+.floating-placeholder {
+    pointer-events: none; /* Ensure the label is not clickable, only the input */
+}

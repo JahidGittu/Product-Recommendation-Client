@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1,
+    "title": "Blurb Core i5",
+    "subtitle": "Surface Laptop",
+    "description": "Multivendor Store",
+    "image": "/images/slider1-product.png",
+    "backgroundImage": "/images/slider1-bg.jpg",
+    "buttonText": "GO TO STORE"
+  },
+  {
+    "id": 2,
+    "title": "XenBook Pro 14",
+    "subtitle": "Ultra Thin Laptop",
+    "description": "Power Meets Portability",
+    "image": "/images/slider2-product.png",
+    "backgroundImage": "/images/slider2-bg.jpg",
+    "buttonText": "SHOP NOW"
+  },
+  {
+    "id": 3,
+    "title": "FlexPad Duo",
+    "subtitle": "2-in-1 Convertible",
+    "description": "Tablet and Laptop in One",
+    "image": "/images/slider3-product.png",
+    "backgroundImage": "/images/slider3-bg.jpg",
+    "buttonText": "VIEW DETAILS"
+  },
+  {
+    "id": 4,
+    "title": "NitroCore Z7",
+    "subtitle": "Gaming Beast",
+    "description": "Feel the Power of Speed",
+    "image": "/images/slider4-product.png",
+    "backgroundImage": "/images/slider4-bg.jpg",
+    "buttonText": "EXPLORE DEALS"
+  },
+  {
+    "id": 5,
+    "title": "EcoBook Lite",
+    "subtitle": "Student Favorite",
+    "description": "Affordable & Efficient",
+    "image": "/images/slider5-product.png",
+    "backgroundImage": "/images/slider5-bg.jpg",
+    "buttonText": "BUY NOW"
+  }
+]
