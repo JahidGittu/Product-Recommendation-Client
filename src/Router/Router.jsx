@@ -7,6 +7,10 @@ import RootLayouts from "../Layouts/RootLayouts";
 import SignIn from "../Pages/SignIn/SignIn";
 import AuthLayout from "../Layouts/AuthLayout";
 import Home from "../Pages/Home/Home";
+import PrivateRoutes from "../Routes/PrivateRoutes";
+import MyQueries from "../Pages/PrivatePages/My Queries/MyQueries";
+import AddQuery from "../Pages/PrivatePages/AddQuery/AddQuery";
+import QueryDetails from "../Pages/PrivatePages/QueryDetails/QueryDetails";
 
 const router = createBrowserRouter([
     {
@@ -15,8 +19,24 @@ const router = createBrowserRouter([
         errorElement: <h1>Error</h1>,
         children: [
             {
-                index:true,
-                element:<Home></Home>
+                index: true,
+                element: <Home></Home>
+            },
+            {
+                path: "/my-Queries",
+                element: <PrivateRoutes><MyQueries></MyQueries></PrivateRoutes>,
+            },
+            {
+                path: "/add-Query",
+                element: <PrivateRoutes><AddQuery></AddQuery></PrivateRoutes>
+            },
+            {
+                path: "/query/details/:id",
+                element: <PrivateRoutes> <QueryDetails/> </PrivateRoutes>
+            },
+            {
+                path: "/update-query/:id",
+                element: <PrivateRoutes> <QueryDetails/> </PrivateRoutes>
             },
         ]
 
@@ -35,7 +55,8 @@ const router = createBrowserRouter([
                 element: <SignUp></SignUp>
             }
         ]
-    }
+    },
+
 
 
 ]);

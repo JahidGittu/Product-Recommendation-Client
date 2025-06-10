@@ -8,13 +8,16 @@ import Lottie from 'lottie-react';
 import useAuth from '../../hooks/useAuth';
 import Swal from 'sweetalert2';
 import SocialLogin from '../Shared/SocialLogin/SocialLogin';
+import Loading from '../Shared/Loading/Loading';
 
 const SignIn = () => {
 
     const { loading, signInUser } = useAuth();
-    const location = useLocation();
-    const navigate = useNavigate();
-    const from = location.state || '/';
+
+    const location = useLocation()
+    const navigate = useNavigate()
+    const from = location.state || '/'
+
     const [showPass, setShowPass] = useState(false);
     const [isPasswordFocused, setIsPasswordFocused] = useState(false);
     const [passwordValidation, setPasswordValidation] = useState({
@@ -52,7 +55,7 @@ const SignIn = () => {
                     icon: "success",
                     text: user.email
                 });
-                navigate(location.state || "/");
+                navigate(from)
             })
             .catch(error => {
                 Swal.fire({
@@ -64,7 +67,7 @@ const SignIn = () => {
     };
 
     if (loading) {
-        return <h1>Loading...</h1>;
+        return <Loading />;
     }
 
     return (

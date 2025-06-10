@@ -1,0 +1,21 @@
+a{
+  color: inherit;
+}
+
+a.active {
+  position: relative;
+  color: inherit; /* optional */
+  text-decoration: none; /* optional */
+}
+
+a.active::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -4px; /* distance from text */
+  transform: translateX(-50%);
+  width: 7px;
+  height: 7px;
+  background-color: greenyellow;
+  border-radius: 50%;
+}

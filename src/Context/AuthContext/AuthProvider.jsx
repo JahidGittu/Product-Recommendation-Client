@@ -31,7 +31,9 @@ const AuthProvider = ({ children }) => {
             setLoading(false)
             console.log("Current User ", currentUser)
         })
-        return unSubscribe
+        return () => {
+            unSubscribe();
+        }
     }, [])
 
     // Google Sign in
@@ -42,6 +44,7 @@ const AuthProvider = ({ children }) => {
     // Signout user
 
     const logout = () => {
+        setLoading(true)
         return signOut(auth)
     }
 
