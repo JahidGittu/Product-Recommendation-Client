@@ -1,0 +1,32 @@
+.input-wrapper {
+    position: relative;
+    margin-bottom: 16px;
+}
+
+.floating-placeholder {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #aaa;
+    transition: all 0.2s ease-in-out;
+    pointer-events: none;
+}
+
+/* Input & Textarea — Focus or Filled */
+input:focus + .floating-placeholder,
+input:not(:placeholder-shown) + .floating-placeholder,
+textarea:focus + .floating-placeholder,
+textarea:not(:placeholder-shown) + .floating-placeholder {
+    top: -10px;
+    left: 10px;
+    font-size: 14px;
+    color: #868686;
+}
+
+/* Focus border */
+input:focus,
+textarea:focus {
+    border-color: #868686;
+}
