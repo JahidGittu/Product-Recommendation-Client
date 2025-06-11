@@ -11,6 +11,8 @@ import PrivateRoutes from "../Routes/PrivateRoutes";
 import MyQueries from "../Pages/PrivatePages/My Queries/MyQueries";
 import AddQuery from "../Pages/PrivatePages/AddQuery/AddQuery";
 import QueryDetails from "../Pages/PrivatePages/QueryDetails/QueryDetails";
+import UpdateQuery from "../Pages/PrivatePages/UpdateQuery/UpdateQuery";
+import AllQueries from "../Pages/AllQueries.jsx/AllQueries";
 
 const router = createBrowserRouter([
     {
@@ -31,12 +33,16 @@ const router = createBrowserRouter([
                 element: <PrivateRoutes><AddQuery></AddQuery></PrivateRoutes>
             },
             {
-                path: "/query/details/:id",
-                element: <PrivateRoutes> <QueryDetails/> </PrivateRoutes>
+                path: "/Queries",
+                element: <AllQueries></AllQueries>
+            },
+            {
+                path: "/query-details/:id",
+                element: <PrivateRoutes><QueryDetails /></PrivateRoutes>
             },
             {
                 path: "/update-query/:id",
-                element: <PrivateRoutes> <QueryDetails/> </PrivateRoutes>
+                element: <PrivateRoutes> <UpdateQuery /> </PrivateRoutes>
             },
         ]
 

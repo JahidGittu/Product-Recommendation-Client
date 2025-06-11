@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { FaEye, FaEdit, FaTrash } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import useAuth from '../../../hooks/useAuth';
+import Loading from '../../Shared/Loading/Loading';
 
 const MyQueries = () => {
 
@@ -53,8 +54,6 @@ const MyQueries = () => {
     });
   };
 
-
-
   return (
     <div className="min-h-screen bg-base-100 space-y-6">
       {/* Banner */}
@@ -68,7 +67,7 @@ const MyQueries = () => {
 
       {/* Queries Section */}
       {loading ? (
-        <div className="text-center py-20">Loading...</div>
+        <Loading/>
       ) : myQueries.length === 0 ? (
         <div className="text-center py-20">
           <p className="text-lg font-medium">No queries found. Want to add one?</p>
@@ -122,7 +121,7 @@ const MyQueries = () => {
 
               {/* Button Section - Always at Bottom */}
               <div className="mt-auto pt-4 border-t-4 border-dashed border-gray-300 flex justify-between items-center">
-                <Link to={`/query/details/${query._id}`}>
+                <Link to={`/query-details/${query._id}`}>
                   <button className="flex gap-1 items-center cursor-pointer"><FaEye /> View</button>
                 </Link>
                 <Link to={`/update-query/${query._id}`}>
