@@ -13,6 +13,8 @@ import AddQuery from "../Pages/PrivatePages/AddQuery/AddQuery";
 import QueryDetails from "../Pages/PrivatePages/QueryDetails/QueryDetails";
 import UpdateQuery from "../Pages/PrivatePages/UpdateQuery/UpdateQuery";
 import AllQueries from "../Pages/AllQueries.jsx/AllQueries";
+import MyRecommendations from "../Pages/PrivatePages/MyRecommendations/MyRecommendations";
+import RecoForMe from "../Pages/PrivatePages/RecoForMe/RecoForMe";
 
 const router = createBrowserRouter([
     {
@@ -35,6 +37,18 @@ const router = createBrowserRouter([
             {
                 path: "/Queries",
                 element: <AllQueries></AllQueries>
+            },
+            {
+                path: "/Recommendation-for-me",
+                element: <PrivateRoutes> <RecoForMe /> </PrivateRoutes>
+            },
+            {
+                path: "/Queries",
+                element: <AllQueries></AllQueries>
+            },
+            {
+                path: "/my-recommendations",
+                element: <PrivateRoutes><MyRecommendations />  </PrivateRoutes>
             },
             {
                 path: "/query-details/:id",

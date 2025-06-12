@@ -75,7 +75,7 @@ const Navbar = () => {
         <>
             <NavLink to="/" className="menu-item ">Home</NavLink>
             <NavLink to="/queries" className="menu-item ">Queries</NavLink>
-            <NavLink to="/recommendations" className="menu-item ">Recommendations For Me</NavLink>
+            <NavLink to="/Recommendation-for-me" className="menu-item ">Recommendations For Me</NavLink>
             <NavLink to="/my-Queries" className="menu-item ">My Queries</NavLink>
             <NavLink to="/my-recommendations" className="menu-item ">My Recommendations</NavLink>
         </>
@@ -138,7 +138,7 @@ const Navbar = () => {
 
             {/* Center Menu (for large screens only) */}
             <div className="hidden lg:flex flex-1 justify-center overflow-x-auto max-w-full">
-                <ul className="menu menu-horizontal flex-nowrap whitespace-nowrap dark:*:text-white *:hover:underline px-1 text-lg gap-2">
+                <ul className="menu menu-horizontal gap-4 flex-nowrap whitespace-nowrap dark:*:text-white *:hover:underline px-1 text-lg gap-2">
                     {links}
                 </ul>
             </div>
