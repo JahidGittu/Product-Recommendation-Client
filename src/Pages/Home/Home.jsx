@@ -6,6 +6,8 @@ import axios from 'axios';
 import FeaturedRecommendations from '../Shared/Components/FeaturedRecommendations';
 import TopRatedProducts from '../Shared/Components/TopRatedProducts';
 import Reviews from '../Shared/Components/Reviews';
+import StatsSection from '../Shared/Components/StatsSection';
+import NewsletterSubscription from '../Shared/Components/NewsLetter';
 
 const Home = () => {
 
@@ -122,6 +124,14 @@ const Home = () => {
 
                 <section>
                     <Reviews></Reviews>
+                </section>
+
+                <section className='pb-[300px]'>
+                    <StatsSection></StatsSection>
+                </section>
+
+                <section>
+                    <NewsletterSubscription></NewsletterSubscription>
                 </section>
             </main>
         </div>

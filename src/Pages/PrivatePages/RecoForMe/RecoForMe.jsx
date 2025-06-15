@@ -155,10 +155,17 @@ export default function RecoForMe() {
 
   if (loading) return <Loading />;
   if (error) return <p className="text-center text-red-500">{error}</p>;
-  if (!recs.length) return <p className="text-center py-20">No recommendations from others yet.</p>;
+  if (!recs.length) return < div className='pt-36 space-y-10'>
+
+    <p className="text-2xl md:text-3xl font-bold text-center">No recommendations from others yet.</p>
+    {/* <p className="text-2xl md:text-3xl font-bold text-center"> Maybe You Have no Queries  </p>
+    <Link to="/add-Query">
+      <button className="btn btn-active mt-4 flex justify-center max-w-md mx-auto bg-white text-blue-600 hover:bg-gray-100">➕ Add New Query</button>
+    </Link> */}
+  </div>;
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 max-w-7xl mx-auto mt-20 space-y-6">
+    <div className="bg-base-100 p-4 md:p-6 lg:p-8 max-w-7xl mx-auto mt-20 space-y-6">
       <h2 className="text-2xl md:text-3xl font-bold text-center">Recommendations For Me</h2>
 
       <div className="flex justify-center gap-3">
@@ -333,32 +340,33 @@ export default function RecoForMe() {
                 <div className="border-t mt-4 pt-3 space-y-2">
                   <h4 className="font-semibold">রিভিউসমূহ:</h4>
 
-                 {reviews.map((r, i) => (
-  <div key={i} className="bg-gray-50 border rounded-lg p-4">
-    <div className="flex gap-3 items-center relative">
-      <img
-        src={r.reviewerPhoto || 'https://i.ibb.co/t4C8Fhg/default-user.png'}
-        alt={r.reviewerName}
-        className="w-10 h-10 rounded-full border object-cover"
-      />
-      <div className="flex-1">
-        <h5 className="text-sm mt-1 font-medium">{r.reviewerName}</h5>
-        <div className="flex items-center gap-1 mt-1">
-          {[...Array(5)].map((_, i) => (
-            <span key={i} className={i < Number(r.rating) ? 'text-yellow-400' : 'text-gray-300'}>
-              ★
-            </span>
-          ))}
-        </div>
-      </div>
-      <span className="text-xs text-gray-500 absolute right-2 top-2">
-        {new Date(r.createdAt).toLocaleDateString()}
-      </span>
-    </div>
-    <p className="text-sm mt-2 text-gray-700 whitespace-pre-line">{r.reviewText}</p>
-  </div>
-))}
+                  {reviews.map((r, i) => (
+                    <div key={i} className="bg-gray-50 border rounded-lg p-4 ">
+                      <div className="flex gap-3 items-center relative">
+                        <img
+                          src={r.userPhoto || 'https://i.ibb.co/t4C8Fhg/default-user.png'}
+                          alt={r.userName}
+                          className="w-10 h-10 rounded-full border object-cover"
+                        />
 
+                        <div className="flex-1">
+                          <h5 className="text-sm mt-1 font-medium">{r.userName}</h5>
+                          <div className="flex items-center gap-1 mt-1">
+                            {[...Array(5)].map((_, i) => (
+                              <span key={i} className={i < r.rating ? 'text-yellow-400' : 'text-gray-300'}>
+                                ★
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        <span className="text-xs text-gray-500 absolute right-2 top-2">
+                          {new Date(r.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <p className="text-sm mt-2 text-gray-700 whitespace-pre-line">{r.comment}</p>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>

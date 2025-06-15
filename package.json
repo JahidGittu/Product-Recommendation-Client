@@ -20,6 +20,7 @@
     "gsap": "^3.13.0",
     "lottie-react": "^2.4.1",
     "motion": "^12.16.0",
+    "nodemailer": "^7.0.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-dropzone": "^14.3.8",

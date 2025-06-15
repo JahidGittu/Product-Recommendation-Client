@@ -107,7 +107,7 @@ const Form = () => {
                         id="name"
                         placeholder=" " // Empty placeholder for floating effect
                         required
-                        className="p-2 py-3 w-full rounded-md focus:outline-none border-b border-gray-600"
+                        className="p-2 py-3 w-full rounded-md focus:outline-none border-b text-accent border-gray-600"
                     />
                     <label htmlFor="name" className="floating-placeholder">Name</label>
                 </div>
@@ -120,7 +120,7 @@ const Form = () => {
                         id="photo"
                         placeholder=" "
                         required
-                        className="p-2 py-3 w-full rounded-md focus:outline-none border-b border-gray-600"
+                        className="p-2 py-3 w-full rounded-md focus:outline-none border-b text-accent border-gray-600"
                     />
                     <label htmlFor="photo" className="floating-placeholder">Photo URL</label>
                 </div>
@@ -133,7 +133,7 @@ const Form = () => {
                         id="email"
                         placeholder=" "
                         required
-                        className="p-2 py-3 w-full rounded-md focus:outline-none border-b border-gray-600"
+                        className="p-2 py-3 w-full rounded-md focus:outline-none border-b text-accent border-gray-600"
                     />
                     <label htmlFor="email" className="floating-placeholder">Email</label>
                 </div>
@@ -147,7 +147,7 @@ const Form = () => {
                             id="password"
                             placeholder=" "
                             required
-                            className="w-full p-2 py-3 rounded-md focus:outline-none border-b border-gray-600"
+                            className="w-full p-2 py-3 rounded-md focus:outline-none border-b text-accent border-gray-600"
                             onChange={handlePasswordChange}
                             onFocus={handleFocus}
                             onBlur={handleBlur}

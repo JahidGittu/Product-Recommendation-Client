@@ -20,7 +20,7 @@ import axios from 'axios';
  * 4. Added simple, Facebook‑style styling tweaks for like / comment rows.
  */
 
-const QueryDetails = ({ theme = 'light' }) => {
+const QueryDetails = () => {
   /* ------------------------------------------------------------------
    * Hooks & state
    * ---------------------------------------------------------------- */
@@ -43,12 +43,7 @@ const QueryDetails = ({ theme = 'light' }) => {
   const [likesMap, setLikesMap] = useState({});
 
   /* ------------------------------ Theme --------------------------- */
-  const bgColor = theme === 'dark' ? 'bg-gray-900' : 'bg-white';
-  const textColor = theme === 'dark' ? 'text-gray-100' : 'text-gray-900';
-  const cardBg = theme === 'dark' ? 'bg-gray-800' : 'bg-gray-100';
-  const borderColor = theme === 'dark' ? 'border-gray-700' : 'border-gray-300';
-
-
+  
   const toggleShowAll = (recId) => {
     setShowAllMap(prev => ({
       ...prev,
@@ -352,7 +347,7 @@ const QueryDetails = ({ theme = 'light' }) => {
   if (!query) return <div className="text-center py-20 text-red-500">Query not found.</div>;
 
   return (
-    <div className={`${bgColor} min-h-screen p-6 md:p-12 mt-24 ${textColor}`}>
+    <div className="bg-base-100 min-h-screen p-6 md:p-12 mt-24">
       <section className="max-w-4xl mx-auto space-y-6">
         {/* ------------------------------------------------------------- */}
         {/* Query / author header                                        */}
@@ -394,7 +389,7 @@ const QueryDetails = ({ theme = 'light' }) => {
         {/* ------------------------------------------------------------- */}
         {/* Add recommendation form                                       */}
         {/* ------------------------------------------------------------- */}
-        <div className={`mt-10 p-6 rounded-lg shadow ${cardBg}`}>
+        <div className="mt-10 p-6 rounded-lg shadow">
           <h3 className="text-2xl font-semibold mb-4">Add a Recommendation</h3>
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Title */}
@@ -517,8 +512,7 @@ const QueryDetails = ({ theme = 'light' }) => {
                 return (
                   <li
                     key={rec._id}
-                    className={`p-4 rounded-lg shadow ${cardBg} border ${borderColor}`}
-                  >
+                    className="p-4 rounded-lg shadow border">
                     <div className="flex items-center gap-4 mb-2">
                       <img
                         src={rec.recommenderPhoto || 'https://via.placeholder.com/40'}
@@ -578,7 +572,7 @@ const QueryDetails = ({ theme = 'light' }) => {
                           >
                             <input
                               type="text"
-                              className="input input-bordered w-full pr-10"
+                              className="input bg-base-100 input-bordered w-full pr-10"
                               placeholder="Write a comment…"
                               value={commentInput}
                               onChange={(e) => setCommentInput(e.target.value)}

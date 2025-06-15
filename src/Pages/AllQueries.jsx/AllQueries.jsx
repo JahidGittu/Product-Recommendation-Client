@@ -139,11 +139,11 @@ const AllQueries = () => {
 
               <div>
                 <h3 className="mb-2 text-xl font-semibold">{q.productName}</h3>
-                <p className="mb-1 text-gray-700">
-                  <span className="font-medium">Query:</span> {q.queryTitle}
+                <p className="mb-1 text-amber-50">
+                  <span className="font-medium ">Query:</span> {q.queryTitle}
                 </p>
-                <p className="mb-3 text-gray-600">
-                  <span className="font-medium">Recommendations:</span>{" "}
+                <p className="mb-3 text-amber-50 ">
+                  <span className="font-medium ">Recommendations:</span>{" "}
                   {q.recommendationCount || 0}
                 </p>
               </div>
