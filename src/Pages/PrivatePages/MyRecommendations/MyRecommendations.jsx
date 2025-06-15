@@ -35,15 +35,24 @@ const MyRecommendations = () => {
 
   /* fetch */
   useEffect(() => {
+    const accessToken = user?.accessToken;
     if (!user?.email) return;
     setLoading(true);
 
     axios
-      .get(`http://localhost:5000/recommendations`, { params: { recommenderEmail: user.email } })
+      .get(`http://localhost:5000/recommendations`, {
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+        params: {
+          recommenderEmail: user.email
+        }
+      })
       .then((res) => setRecs(res.data))
       .catch(() => setError('Failed to fetch recommendations'))
       .finally(() => setLoading(false));
   }, [user?.email]);
+
 
   /* preview - এখন পুরো recommendation অবজেক্ট নিবে */
   const openPreview = (rec) => {

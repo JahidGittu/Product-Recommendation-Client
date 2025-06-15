@@ -15,28 +15,27 @@ const MyQueries = () => {
 
 
   useEffect(() => {
-    const accessToken = user?.accessToken;
+  const accessToken = user?.accessToken;
 
-    if (!authLoading && user?.email && accessToken) {
-      setLoading(true);
+  if (!authLoading && user?.email && accessToken) {
+    setLoading(true);
 
-      fetch(`http://localhost:5000/queries?email=${user.email}`, {
-        credentials: 'include',
-        headers: {
-          authorization: `Bearer ${accessToken}`,
-        },
+    fetch(`http://localhost:5000/queries?email=${user.email}`, {
+      headers: {
+        authorization: `Bearer ${accessToken}`
+      }
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setMyQueries(data);
+        setLoading(false);
       })
-        .then((res) => res.json())
-        .then((data) => {
-          setMyQueries(data);
-          setLoading(false);
-        })
-        .catch((err) => {
-          console.error('Error fetching user posts:', err);
-          setLoading(false);
-        });
-    }
-  }, [authLoading, user]);
+      .catch((err) => {
+        console.error('Error fetching user posts:', err);
+        setLoading(false);
+      });
+  }
+}, [authLoading, user]);
 
 
 
@@ -64,6 +63,7 @@ const MyQueries = () => {
       }
     });
   };
+
 
   return (
     <div className="min-h-screen bg-base-100 space-y-6">

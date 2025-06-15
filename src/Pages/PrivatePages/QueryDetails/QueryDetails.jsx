@@ -43,7 +43,7 @@ const QueryDetails = () => {
   const [likesMap, setLikesMap] = useState({});
 
   /* ------------------------------ Theme --------------------------- */
-  
+
   const toggleShowAll = (recId) => {
     setShowAllMap(prev => ({
       ...prev,
@@ -98,13 +98,55 @@ const QueryDetails = () => {
   /* ------------------------------------------------------------------
    * Fetch query + recommendations
    * ---------------------------------------------------------------- */
+  // useEffect(() => {
+  //   if (!id) return;
+  //   setLoading(true);
+
+  //   Promise.all([
+  //     fetch(`http://localhost:5000/queries/${id}`).then(res => res.json()),
+  //     fetch(`http://localhost:5000/recommendations?queryId=${id}`).then(res => res.json()),
+  //   ])
+  //     .then(([queryData, recs]) => {
+  //       setQuery(queryData);
+  //       setRecommendations(recs);
+
+  //       // Build likes map from backend data
+  //       const initialLikes = {};
+  //       recs.forEach((r) => {
+  //         initialLikes[r._id] = {
+  //           liked: r.likes?.includes(user?.email),
+  //           count: r.likes?.length || 0,
+  //         };
+  //       });
+  //       setLikesMap(initialLikes);
+  //     })
+  //     .catch(console.error)
+  //     .finally(() => setLoading(false));
+  // }, [id, user]);
+
+
   useEffect(() => {
     if (!id) return;
     setLoading(true);
 
+    const accessToken = user?.accessToken;
+    const userEmail = user?.email;  
+
+    // এক্সেস টোকেন সহ API কল
     Promise.all([
-      fetch(`http://localhost:5000/queries/${id}`).then(res => res.json()),
-      fetch(`http://localhost:5000/recommendations?queryId=${id}`).then(res => res.json()),
+      fetch(`http://localhost:5000/queries/${id}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`, 
+          'User-Email': userEmail, 
+        }
+      }).then(res => res.json()),
+
+      fetch(`http://localhost:5000/recommendations?queryId=${id}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`, 
+          'User-Email': userEmail,
+        }
+      }).then(res => res.json()),
     ])
       .then(([queryData, recs]) => {
         setQuery(queryData);
@@ -123,6 +165,9 @@ const QueryDetails = () => {
       .catch(console.error)
       .finally(() => setLoading(false));
   }, [id, user]);
+
+
+
 
   /* ------------------------------------------------------------------
    * Image upload / recommendation form state

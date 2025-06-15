@@ -12,7 +12,8 @@ const AllQueries = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:5000/queries")
+    // No authentication needed here, no token required
+    fetch("http://localhost:5000/queries/all")  // Just get the queries
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch queries");
         return res.json();
@@ -96,7 +97,6 @@ const AllQueries = () => {
 
       </div>
 
-
       {/* 🧲 Fancy Layout Toggle Buttons */}
       <div className="flex justify-center items-center pb-6 gap-1">
         {[1, 2, 3].map((n) => (
@@ -112,8 +112,6 @@ const AllQueries = () => {
           </button>
         ))}
       </div>
-
-
 
       {/* ---------- Grid View ---------- */}
       {filteredQueries.length === 0 ? (

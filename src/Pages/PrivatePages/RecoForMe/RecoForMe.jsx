@@ -25,10 +25,12 @@ export default function RecoForMe() {
   const [hasUserReviewed, setHasUserReviewed] = useState(false);
 
   useEffect(() => {
+    const accessToken = user?.accessToken
     if (!user?.email) return;
     setLoading(true);
     axios
       .get(`http://localhost:5000/recommendations/for-me`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
         params: { email: user.email },
       })
       .then(res => setRecs(res.data))
