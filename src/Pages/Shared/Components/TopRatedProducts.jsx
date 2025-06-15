@@ -13,7 +13,7 @@ const TopRatedProducts = ({topProducts}) => {
 
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                 {topProducts.map(rec => (
-                    <div key={rec._id} className="bg-white rounded-lg shadow-md p-6 flex flex-col">
+                    <div key={rec._id} className="bg-white border border-gray-500 rounded-lg shadow-md p-6 flex flex-col">
                         <img
                             src={rec.productImage}
                             alt={rec.productName}

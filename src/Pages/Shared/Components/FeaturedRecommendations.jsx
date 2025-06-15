@@ -19,7 +19,7 @@ const FeaturedRecommendations = ({ recommendations }) => {
         {recommendations.map((rec) => (
           <div
             key={rec._id}
-            className="bg-white rounded-lg shadow-md p-6 flex flex-col"
+            className="bg-white border border-gray-500 rounded-lg shadow-md p-6 flex flex-col"
           >
             <img
               src={rec.productImage}

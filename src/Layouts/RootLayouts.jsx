@@ -5,12 +5,17 @@ import Footer from '../Pages/Shared/Components/Footer';
 
 const RootLayouts = () => {
     return (
-        <div>
+        <div className="flex flex-col min-h-screen">
             <header className='z-10'>
                 <Navbar></Navbar>
             </header>
-            <Outlet></Outlet>
-            <Footer></Footer>
+
+            {/* Content section that grows to fill remaining space */}
+            <main className="flex-grow">
+                <Outlet />
+            </main>
+
+            <Footer />
         </div>
     );
 };

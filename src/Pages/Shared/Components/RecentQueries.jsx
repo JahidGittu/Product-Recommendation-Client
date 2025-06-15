@@ -50,11 +50,11 @@ const RecentQueries = () => {
     return (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
             <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">Recent Queries</h1>
-            <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-8  sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 {queries.map((query) => (
                     <div
                         key={query._id}
-                        className="bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col"
+                        className="bg-white border border-gray-500 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col"
                     >
                         <img
                             src={query.productImage}

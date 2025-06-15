@@ -182,9 +182,9 @@ export default function RecoForMe() {
 
       {view === 'table' && (
         <div className="hidden sm:block overflow-x-auto">
-          <table className="min-w-full bg-white shadow rounded-lg text-sm">
+          <table className="min-w-full table shadow-xl rounded-lg text-sm">
             <thead>
-              <tr className="bg-gray-200 text-left">
+              <tr className="bg-base-300 text-left">
                 {['Recommendation', 'Product', 'Query', 'By', 'Date', 'Action'].map(h => (
                   <th key={h} className="py-2 px-3">
                     {h}
@@ -226,18 +226,18 @@ export default function RecoForMe() {
       {(view === 'card' || view === 'table') && (
         <div className={`${view === 'table' ? 'sm:hidden' : ''} ${grid}`}>
           {recs.map(r => (
-            <div key={r._id} className="bg-white shadow rounded-xl p-4 flex flex-col">
+            <div key={r._id} className="shadow border border-r-gray-700 rounded-xl p-4 flex flex-col">
               <h3 className="text-lg font-semibold">{r.recommendationTitle}</h3>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm ">
                 <strong>Product:</strong> {r.productName}
               </p>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm ">
                 <strong>Query:</strong> {r.queryTitle}
               </p>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm ">
                 <strong>By:</strong> {r.recommenderName}
               </p>
-              <p className="text-xs text-gray-500 mt-1">{new Date(r.timestamp).toLocaleDateString()}</p>
+              <p className="text-xs  mt-1">{new Date(r.timestamp).toLocaleDateString()}</p>
               <div className="mt-auto flex gap-2 pt-4">
                 <button className="flex-1 btn btn-sm btn-outline" onClick={() => handleView(r)}>
                   View <FaRegEye className="ml-1" />
@@ -266,7 +266,7 @@ export default function RecoForMe() {
           >
             &times;
           </button>
-          <div className="relative w-full max-w-lg bg-white rounded-xl shadow-lg max-h-[90vh] overflow-y-auto">
+          <div className="relative w-full max-w-lg bg-base-300 border border-r-gray-600 rounded-xl shadow-lg max-h-[90vh] overflow-y-auto">
             {modal.productImage && (
               <img src={modal.productImage} alt={modal.productName} className="w-full h-48 object-cover rounded-t-xl" />
             )}

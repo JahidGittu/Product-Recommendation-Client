@@ -77,6 +77,9 @@ const MyRecommendations = () => {
       });
   };
 
+
+
+
   /* UI states */
   if (loading) return <Loading />;
   if (error) return <p className="text-red-500 text-center">{error}</p>;
@@ -105,9 +108,9 @@ const MyRecommendations = () => {
       {/* ------------------------ TABLE VIEW ------------------------ */}
       {viewMode === 'table' && (
         <div className="overflow-x-auto rounded-lg shadow">
-          <table className="min-w-full bg-white text-sm">
+          <table className="min-w-full table bg-base-100  text-sm">
             <thead>
-              <tr className="bg-gray-100 text-left font-semibold">
+              <tr className="bg-base-300 text-left font-semibold">
                 <th className="py-3 px-4">Title</th>
                 {/* hide on xs */}
                 <th className="py-3 px-4 hidden sm:table-cell">Product</th>
@@ -158,17 +161,17 @@ const MyRecommendations = () => {
           {recs.map((rec) => (
             <div
               key={rec._id}
-              className="flex flex-col justify-between rounded-xl bg-white p-4 shadow"
+              className="flex flex-col justify-between rounded-xl p-4 shadow"
             >
               <div className="space-y-3">
                 <h3 className="text-xl font-semibold">{rec.recommendationTitle}</h3>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm ">
                   <strong>Product:</strong> {rec.productName}
                 </p>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm ">
                   <strong>Query:</strong> {rec.queryTitle}
                 </p>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs ">
                   {new Date(rec.timestamp).toLocaleDateString()}
                 </p>
               </div>
@@ -209,12 +212,12 @@ const MyRecommendations = () => {
           />
           <button
             onClick={() => setPreviewOpen(false)}
-            className="fixed top-6 right-6 z-50 flex h-10 w-10 items-center justify-center rounded-full bg-gray-400 text-2xl text-white shadow-lg"
+            className="fixed top-6 right-6 z-50 flex h-10 w-10 items-center justify-center rounded-full text-2xl  shadow-lg"
           >
             &times;
           </button>
 
-          <div className="relative z-40 w-11/12 sm:w-4/5 md:w-2/3 lg:w-1/2 max-h-[90vh] overflow-y-auto rounded-xl bg-white shadow-lg">
+          <div className="relative bg-base-300 z-40 w-11/12 sm:w-4/5 md:w-2/3 lg:w-1/2 max-h-[90vh] overflow-y-auto rounded-xl  shadow-lg">
             {activeRec ? (
               <>
                 {activeRec.productImage && (
@@ -235,7 +238,7 @@ const MyRecommendations = () => {
                     )}
                     <div>
                       <p className="font-semibold text-lg">{activeRec.recommendationTitle}</p>
-                      <p className="text-gray-600 text-sm">
+                      <p className=" text-sm">
                         By <span className="font-medium">{activeRec.recommenderName || activeRec.userName}</span> ·{' '}
                         {new Date(activeRec.timestamp).toLocaleString()}
                       </p>
@@ -243,9 +246,9 @@ const MyRecommendations = () => {
                   </div>
 
                   <p className="text-xl font-semibold">{activeRec.productName}</p>
-                  <p className="italic text-gray-700">{activeRec.queryTitle}</p>
+                  <p className="italic ">{activeRec.queryTitle}</p>
 
-                  <p className="whitespace-pre-line text-gray-800">
+                  <p className="whitespace-pre-line ">
                     {activeRec.recommendationReason || activeRec.recommendationText || 'No detailed reason provided.'}
                   </p>
 
@@ -339,9 +342,6 @@ const MyRecommendations = () => {
                                   <div key={i} className="border rounded p-2 md:px-5 bg-white shadow-sm w-full">
                                     <p className="font-semibold text-sm text-gray-800">{comment.user}</p>
                                     <p className="text-gray-700 text-sm">{comment.text}</p>
-                                    <p className="text-xs text-gray-400 text-right">
-                                      {new Date(comment.timestamp).toLocaleString()}
-                                    </p>
                                   </div>
                                 ))}
                               </div>

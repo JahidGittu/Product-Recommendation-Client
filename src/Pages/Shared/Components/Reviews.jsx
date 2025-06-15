@@ -4,10 +4,9 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import useAuth from "../../../hooks/useAuth";
 
-
 const Reviews = () => {
   const [testimonials, setTestimonials] = useState([]);
-  const { user } = useAuth(); 
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -66,40 +65,52 @@ const Reviews = () => {
       <Slider {...settings}>
         {chunked.map((group, idx) => (
           <div key={idx}>
+
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-4">
               {group.map((item) => (
-                <div
-                  key={item._id}
-                  className="bg-white shadow-md p-6 rounded-xl border border-gray-200 transition hover:shadow-lg"
-                >
-                  <p className="text-sm text-gray-700 italic mb-4">
-                    “{item.comment}”
-                  </p>
 
-                  {/* রেটিং */}
-                  <div className="rating rating-sm mb-2">
-                    {[1, 2, 3, 4, 5].map((i) => (
-                      <input
-                        key={i}
-                        type="radio"
-                        className="mask mask-star-2 bg-orange-400"
-                        readOnly
-                        checked={item.rating === i}
-                      />
-                    ))}
+
+                <div key={item._id} className="">
+
+                  {/* রেটিং (মাঝে) */}
+                  <div className="flex justify-center mb-12">
+                    <div className="rating rating-sm">
+                      {[1, 2, 3, 4, 5].map((i) => (
+                        <input
+                          key={i}
+                          type="radio"
+                          className="mask mask-star-2 bg-orange-400"
+                          readOnly
+                          checked={item.rating === i}
+                        />
+                      ))}
+                    </div>
                   </div>
+                  <div className="relative bg-base-200 shadow-lg p-6 rounded-xl hover:shadow-xl transition-all border border-gray-500">
 
-                  {/* ইউজার ইনফো */}
-                  <div className="flex items-center gap-4 mt-4">
-                    <img
-                      src={item.photo}
-                      alt={item.name}
-                      className="w-12 h-12 rounded-full object-cover border-2 border-primary"
-                    />
-                    <div className="text-sm text-gray-600">
-                      <p className="font-semibold">{item.name}</p>
-                      <p className="text-xs">{item.location}</p>
-                      <p className="text-xs text-gray-400">
+
+                    {/* রিভিউকার্ডের উপরে ব্যবহারকারীর ছবি */}
+                    <div className="flex justify-center mb-4 absolute -top-10 right-32">
+                      <img
+                        src={item.photo}
+                        alt={item.name}
+                        className="w-20 h-20 bg-amber-200 rounded-full object-cover border-2 border-primary"
+                      />
+                    </div>
+                    <div className="mt-12 min-h-[100px] h-full ">
+                      {/* ব্যবহারকারীর নাম */}
+                      <h3 className="text-lg font-semibold text-primary text-center mb-2">{item.name}</h3>
+
+                      {/* রিভিউ কমেন্ট (উদ্ধৃতি চিহ্ন সহ) */}
+                      <p className="text-sm text-gray-700 italic text-center">
+                        <span className="font-bold">“</span>{item.comment}<span className="font-bold">”</span>
+                      </p>
+
+
+                      {/* লোকেশন এবং তারিখ */}
+
+                      <p className="text-xs text-gray-400 text-center mt-2">
                         {new Date(item.createdAt).toLocaleDateString("bn-BD", {
                           year: "numeric",
                           month: "long",
