@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import './Form.css';
-import { Link, Navigate, useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import useAuth from '../../../hooks/useAuth';
 import SocialLogin from '../../Shared/SocialLogin/SocialLogin';
 
 const Form = () => {
-
-    const { createUser, updateUser } = useAuth()
-
-    const navigate = useNavigate()
+    const { createUser, updateUser } = useAuth();
+    const navigate = useNavigate();
 
     const [showPass, setShowPass] = useState(false);
     const [passwordValidation, setPasswordValidation] = useState({
@@ -43,35 +41,32 @@ const Form = () => {
         const photo = form.photo.value;
         const email = form.email.value;
         const password = form.password.value;
-        const data = {
-            name,
-            photo,
-            email,
-            password
-        };
-        console.log(data);
 
+        // Firebase sign-up
         createUser(email, password)
             .then(result => {
-                const user = result.user;
+                const user = result.user;  // Firebase user object থেকে
+
+                // Update Firebase profile
                 updateUser({
                     displayName: name,
                     photoURL: photo
                 })
                     .then(() => {
-                        navigate("/")
-                        // setUser({ ...user, displayName: name, photoURL: photo });
+                        // After successful Firebase profile update, send data to server
+                        sendProfileDataToServer(user.uid, name, photo, email);
+
                         Swal.fire({
                             title: "Registration Successful!",
                             icon: "success",
                             draggable: true
                         });
 
-
+                        navigate("/"); // Redirect to the homepage or dashboard
                     })
                     .catch(error => {
                         Swal.fire({
-                            title: 'Update Failed',
+                            title: 'Profile Update Failed',
                             text: error.message,
                             icon: 'error'
                         });
@@ -86,6 +81,32 @@ const Form = () => {
             });
     };
 
+    const sendProfileDataToServer = async (userId, name, photo, email) => {
+        const profileData = {
+            userId,
+            name,
+            photo,
+            email,
+        };
+
+        try {
+            const response = await fetch('http://localhost:5000/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(profileData),
+            });
+
+            if (response.ok) {
+                console.log('Profile data sent to server successfully');
+            } else {
+                console.error('Failed to send profile data to server');
+            }
+        } catch (error) {
+            console.error('Error sending profile data to server:', error);
+        }
+    };
 
     const handleFocus = () => {
         setIsPasswordFocused(true);
@@ -105,14 +126,14 @@ const Form = () => {
                         name="name"
                         type="text"
                         id="name"
-                        placeholder=" " // Empty placeholder for floating effect
+                        placeholder=" "
                         required
                         className="p-2 py-3 w-full rounded-md focus:outline-none border-b text-accent border-gray-600"
                     />
                     <label htmlFor="name" className="floating-placeholder">Name</label>
                 </div>
 
-                {/* Photo */}
+                {/* Photo URL */}
                 <div className="input-wrapper">
                     <input
                         name="photo"
@@ -198,7 +219,7 @@ const Form = () => {
             <div className="divider">OR</div>
 
             {/* Google */}
-            <SocialLogin></SocialLogin>
+            <SocialLogin />
 
             <span>Already have Account? <Link to="/auth/signIn">Login</Link></span>
         </div>

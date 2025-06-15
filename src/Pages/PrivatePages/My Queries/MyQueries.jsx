@@ -4,6 +4,7 @@ import { FaEye, FaEdit, FaTrash } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import useAuth from '../../../hooks/useAuth';
 import Loading from '../../Shared/Loading/Loading';
+import { Helmet } from 'react-helmet';
 
 const MyQueries = () => {
 
@@ -15,27 +16,27 @@ const MyQueries = () => {
 
 
   useEffect(() => {
-  const accessToken = user?.accessToken;
+    const accessToken = user?.accessToken;
 
-  if (!authLoading && user?.email && accessToken) {
-    setLoading(true);
+    if (!authLoading && user?.email && accessToken) {
+      setLoading(true);
 
-    fetch(`http://localhost:5000/queries?email=${user.email}`, {
-      headers: {
-        authorization: `Bearer ${accessToken}`
-      }
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setMyQueries(data);
-        setLoading(false);
+      fetch(`http://localhost:5000/queries?email=${user.email}`, {
+        headers: {
+          authorization: `Bearer ${accessToken}`
+        }
       })
-      .catch((err) => {
-        console.error('Error fetching user posts:', err);
-        setLoading(false);
-      });
-  }
-}, [authLoading, user]);
+        .then((res) => res.json())
+        .then((data) => {
+          setMyQueries(data);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error('Error fetching user posts:', err);
+          setLoading(false);
+        });
+    }
+  }, [authLoading, user]);
 
 
 
@@ -67,6 +68,11 @@ const MyQueries = () => {
 
   return (
     <div className="min-h-screen bg-base-100 space-y-6">
+
+      <Helmet>
+        <title>My Queries | Recommend Product</title>
+      </Helmet>
+
       {/* Banner */}
       <div className=" bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500  text-white min-h-[400px] flex flex-col justify-center items-center py-10 text-center mb-8 ">
         <h1 className="text-3xl md:text-4xl font-bold">Your Product Queries</h1>

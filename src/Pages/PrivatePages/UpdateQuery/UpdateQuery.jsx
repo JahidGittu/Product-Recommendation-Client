@@ -4,8 +4,14 @@ import { useDropzone } from 'react-dropzone';
 import { toast, ToastContainer } from 'react-toastify';
 import { MdDeleteForever } from 'react-icons/md';
 import { FaSearch } from 'react-icons/fa';
+import useAuth from '../../../hooks/useAuth';
+import { Helmet } from 'react-helmet';
 
 const UpdateQuery = () => {
+
+
+  const { user } = useAuth();
+
   const { id } = useParams();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -18,9 +24,17 @@ const UpdateQuery = () => {
   const [previewImage, setPreviewImage] = useState('');
   const [updating, setUpdating] = useState(false);
 
+  const accessToken = user?.accessToken
+  const userEmail = user?.email
+
   // Fetch existing query data
   useEffect(() => {
-    fetch(`http://localhost:5000/queries/${id}`)
+    fetch(`http://localhost:5000/queries/${id}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'User-Email': userEmail,
+      }
+    })
       .then(res => res.json())
       .then(data => {
         setFormData({
@@ -38,11 +52,11 @@ const UpdateQuery = () => {
   }, [id]);
 
   const uploadImageToImgBB = async file => {
-    const apiKey = '35c276788d20fd3df8aed7571cc51938';
+      const imgBbAPiKey = import.meta.env.VITE_IMGBB_API_KEY
     const formData = new FormData();
     formData.append('image', file);
 
-    const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+    const response = await fetch(`https://api.imgbb.com/1/upload?key=${imgBbAPiKey}`, {
       method: 'POST',
       body: formData,
     });
@@ -142,7 +156,10 @@ const UpdateQuery = () => {
 
   return (
     <div className="max-w-3xl mx-auto p-6 mt-24">
-      <ToastContainer/>
+      <Helmet>
+        <title>{`Update ${id} Query Id | Recommend Product`}</title>
+      </Helmet>
+      <ToastContainer />
       <h2 className="text-3xl font-semibold mb-6 text-center">Update Product Query</h2>
       <form onSubmit={handleUpdate} className="space-y-6 bg-white shadow-xl rounded-2xl p-6">
         <div>

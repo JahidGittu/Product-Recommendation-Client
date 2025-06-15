@@ -8,6 +8,7 @@ import TopRatedProducts from '../Shared/Components/TopRatedProducts';
 import Reviews from '../Shared/Components/Reviews';
 import StatsSection from '../Shared/Components/StatsSection';
 import NewsletterSubscription from '../Shared/Components/NewsLetter';
+import { Helmet } from 'react-helmet';
 
 const Home = () => {
 
@@ -102,6 +103,9 @@ const Home = () => {
 
     return (
         <div>
+            <Helmet>
+                <title>Recommend Product</title>
+            </Helmet>
             <header >
                 <Hero></Hero>
             </header>

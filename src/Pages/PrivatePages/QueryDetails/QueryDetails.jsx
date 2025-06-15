@@ -8,6 +8,7 @@ import { CiLocationArrow1 } from "react-icons/ci";
 import { AiFillLike, AiOutlineLike } from 'react-icons/ai';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import { Helmet } from 'react-helmet';
 
 /**
  * QueryDetails Component
@@ -41,6 +42,8 @@ const QueryDetails = () => {
 
   // Map of recommendationId → { liked: boolean, count: number }
   const [likesMap, setLikesMap] = useState({});
+
+  const imgBbAPiKey = import.meta.env.VITE_IMGBB_API_KEY
 
   /* ------------------------------ Theme --------------------------- */
 
@@ -130,20 +133,20 @@ const QueryDetails = () => {
     setLoading(true);
 
     const accessToken = user?.accessToken;
-    const userEmail = user?.email;  
+    const userEmail = user?.email;
 
     // এক্সেস টোকেন সহ API কল
     Promise.all([
       fetch(`http://localhost:5000/queries/${id}`, {
         headers: {
-          Authorization: `Bearer ${accessToken}`, 
-          'User-Email': userEmail, 
+          Authorization: `Bearer ${accessToken}`,
+          'User-Email': userEmail,
         }
       }).then(res => res.json()),
 
       fetch(`http://localhost:5000/recommendations?queryId=${id}`, {
         headers: {
-          Authorization: `Bearer ${accessToken}`, 
+          Authorization: `Bearer ${accessToken}`,
           'User-Email': userEmail,
         }
       }).then(res => res.json()),
@@ -223,7 +226,7 @@ const QueryDetails = () => {
       try {
         const imgData = new FormData();
         imgData.append('image', imageFile);
-        const res = await fetch(`https://api.imgbb.com/1/upload?key=35c276788d20fd3df8aed7571cc51938`, {
+        const res = await fetch(`https://api.imgbb.com/1/upload?key=${imgBbAPiKey}`, {
           method: 'POST',
           body: imgData,
         });
@@ -393,6 +396,9 @@ const QueryDetails = () => {
 
   return (
     <div className="bg-base-100 min-h-screen p-6 md:p-12 mt-24">
+      <Helmet>
+        <title>{`Query ${id} Details | Recommend Product`}</title>
+      </Helmet>
       <section className="max-w-4xl mx-auto space-y-6">
         {/* ------------------------------------------------------------- */}
         {/* Query / author header                                        */}

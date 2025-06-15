@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet'
 import registerLottie from '../../assets/Lotties/register.json'
 import Form from './Form/Form'
 import './SignUp.css'
@@ -9,6 +10,9 @@ const SignUp = () => {
 
   return (
     <div className='sign-up-page'>
+      <Helmet>
+        <title>Sign-Up | Recommend Product</title>
+      </Helmet>
       <main className='sign-up-container'>
         <div className="sign-up-left sign-up-column">
           <Lottie

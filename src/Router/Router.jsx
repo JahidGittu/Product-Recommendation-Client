@@ -15,12 +15,16 @@ import UpdateQuery from "../Pages/PrivatePages/UpdateQuery/UpdateQuery";
 import AllQueries from "../Pages/AllQueries.jsx/AllQueries";
 import MyRecommendations from "../Pages/PrivatePages/MyRecommendations/MyRecommendations";
 import RecoForMe from "../Pages/PrivatePages/RecoForMe/RecoForMe";
+import AboutUs from "../Pages/WebsiteInfo/AboutUs";
+import ContactUs from "../Pages/WebsiteInfo/ContactUs";
+import ErrorPage from "../Pages/ErrorPage/ErrorPage";
+import Profile from "../Pages/Profile/Profile";
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <RootLayouts></RootLayouts>,
-        errorElement: <h1>Error</h1>,
+        errorElement: <ErrorPage></ErrorPage>,
         children: [
             {
                 index: true,
@@ -57,6 +61,18 @@ const router = createBrowserRouter([
             {
                 path: "/update-query/:id",
                 element: <PrivateRoutes> <UpdateQuery /> </PrivateRoutes>
+            },
+            {
+                path: "/about-us",
+                element: <AboutUs></AboutUs>
+            },
+            {
+                path: "/contact-us",
+                element: <ContactUs></ContactUs>
+            },
+            {
+                path: "/my-profile",
+                element: <PrivateRoutes><Profile></Profile></PrivateRoutes>
             },
         ]
 

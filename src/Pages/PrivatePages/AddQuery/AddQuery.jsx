@@ -8,6 +8,7 @@ import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 import { MdDeleteForever } from "react-icons/md";
 import { FaSearch } from "react-icons/fa";
 import axios from 'axios';
+import { Helmet } from 'react-helmet';
 
 const AddQuery = () => {
     const { user } = useAuth();
@@ -27,6 +28,8 @@ const AddQuery = () => {
         const productBrand = form.productBrand.value.trim();
         const queryTitle = form.queryTitle.value.trim();
         const boycottReason = form.boycottReason.value.trim();
+
+        const imgBbAPiKey = import.meta.env.VITE_IMGBB_API_KEY
 
         if (!productName || !productBrand || !queryTitle || !boycottReason) {
             Swal.fire({
@@ -57,7 +60,7 @@ const AddQuery = () => {
             imageData.append('image', imageFile);
 
             try {
-                const imgRes = await fetch('https://api.imgbb.com/1/upload?key=35c276788d20fd3df8aed7571cc51938', {
+                const imgRes = await fetch(`https://api.imgbb.com/1/upload?key=${imgBbAPiKey}`, {
                     method: 'POST',
                     body: imageData,
                 });
@@ -165,7 +168,7 @@ const AddQuery = () => {
                 setImageFile(null);
                 setPreviewImage(clipboardText);
                 toast.success("Image URL pasted from clipboard!");
-            } 
+            }
             // else {
             //     toast.info("📋 Clipboard doesn't contain a valid image URL");
             // }
@@ -216,6 +219,9 @@ const AddQuery = () => {
 
     return (
         <div className="max-w-3xl mx-auto mt-24 bg-base-100 rounded-xl shadow-xl p-8">
+            <Helmet>
+                <title>Add New Query | Recommend Product</title>
+            </Helmet>
             <ToastContainer />
             <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center text-blue-700">Add a New Query</h2>
             <form onSubmit={handleAddQuery} className="space-y-6 *:pt-4">

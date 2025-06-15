@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
+import { Helmet } from "react-helmet";
 import { useNavigate } from "react-router";
 
 const AllQueries = () => {
@@ -61,6 +62,9 @@ const AllQueries = () => {
 
   return (
     <div className="mx-auto mt-24 max-w-7xl p-4">
+      <Helmet>
+        <title>All Queries | Recommend Product</title>
+      </Helmet>
       {/* ---------- Heading ---------- */}
       <h2 className="text-3xl font-bold text-center mb-8">All Queries</h2>
 

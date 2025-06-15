@@ -11,11 +11,11 @@ const SocialLogin = ({ from }) => {
         signinWithGoogle()
             .then(res => {
                 const user = res.user
-                console.log(user)
+                // console.log(user)
                 navigate(from || "/")
             })
             .catch(error => {
-                console.log(error)
+                // console.log(error)
             })
     }
 

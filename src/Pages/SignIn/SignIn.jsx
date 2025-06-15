@@ -9,6 +9,7 @@ import useAuth from '../../hooks/useAuth';
 import Swal from 'sweetalert2';
 import SocialLogin from '../Shared/SocialLogin/SocialLogin';
 import Loading from '../Shared/Loading/Loading';
+import { Helmet } from 'react-helmet';
 
 const SignIn = () => {
 
@@ -72,6 +73,9 @@ const SignIn = () => {
 
     return (
         <div className="hero bg-base-200 min-h-screen">
+            <Helmet>
+                <title>Sign-In | Recommend Product</title>
+            </Helmet>
             <div className="hero-content flex-col lg:flex-row-reverse">
                 {/* Left Lottie Animation */}
                 <div className="text-center lg:text-left">

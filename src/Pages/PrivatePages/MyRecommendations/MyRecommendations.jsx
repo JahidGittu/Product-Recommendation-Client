@@ -9,6 +9,7 @@ import { MdDelete } from 'react-icons/md';
 import { Tooltip } from 'react-tooltip';
 import { FcLike } from "react-icons/fc";
 import { FaRegCommentDots } from "react-icons/fa";
+import { Helmet } from 'react-helmet';
 
 const MyRecommendations = () => {
   const { user } = useAuth();
@@ -96,6 +97,9 @@ const MyRecommendations = () => {
 
   return (
     <div className="px-3 sm:px-6 lg:px-8 py-6 max-w-7xl mx-auto mt-24 space-y-8">
+      <Helmet>
+        <title>My Recommendation | Recommend Product</title>
+      </Helmet>
       <h2 className="text-center text-3xl font-bold">My Recommendations</h2>
 
       {/* view toggle */}

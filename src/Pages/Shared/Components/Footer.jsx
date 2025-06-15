@@ -4,6 +4,7 @@ import axios from 'axios';
 import { FaStumbleupon } from 'react-icons/fa';
 import { CiLocationArrow1 } from 'react-icons/ci';
 import useAuth from '../../../hooks/useAuth';
+import { Link } from 'react-router';
 
 const Footer = () => {
     const { user } = useAuth();  
@@ -51,16 +52,14 @@ const Footer = () => {
                         alt="Website Logo"
                         className="w-16 h-16"
                     />
-                    <span className="font-bold text-xl">Your Slogan Here</span>
+                    <span className="font-bold text-xl">Buy Best Alternatives and be Happy!</span>
                 </div>
 
                 {/* মাঝখানে ফুটার কন্টেন্ট: লিংক এবং কপিরাইট */}
                 <div className="text-center lg:text-left">
                     <div className="space-x-6 mb-4">
-                        <a className="link link-hover">About us</a>
-                        <a className="link link-hover">Contact</a>
-                        <a className="link link-hover">Jobs</a>
-                        <a className="link link-hover">Press kit</a>
+                        <Link to="/about-us" className="link link-hover">About Us</Link>
+                        <Link to="/contact-us" className="link link-hover">Contact Us</Link>
                     </div>
                     <div>
                         <p>Copyright © {new Date().getFullYear()} - All rights reserved by ACME Industries Ltd</p>

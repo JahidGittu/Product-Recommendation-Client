@@ -8,6 +8,7 @@ import Loading from '../../Shared/Loading/Loading';
 import { toast } from 'react-toastify';
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
+import { Helmet } from 'react-helmet';
 
 
 export default function RecoForMe() {
@@ -168,6 +169,9 @@ export default function RecoForMe() {
 
   return (
     <div className="bg-base-100 p-4 md:p-6 lg:p-8 max-w-7xl mx-auto mt-20 space-y-6">
+      <Helmet>
+        <title>Recomendation For Me | Recommend Product</title>
+      </Helmet>
       <h2 className="text-2xl md:text-3xl font-bold text-center">Recommendations For Me</h2>
 
       <div className="flex justify-center gap-3">

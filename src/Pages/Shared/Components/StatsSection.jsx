@@ -16,8 +16,18 @@ const StatsSection = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/stats');
-        setStats(res.data);
+        // Fetch platform stats
+        const statsRes = await axios.get('http://localhost:5000/stats');
+
+        // Fetch user stats (user count)
+        const usersRes = await axios.get('http://localhost:5000/users/stats');  // New API for users stats
+
+        // Combine both responses into stats state
+        setStats({
+          ...statsRes.data,
+          uniqueUsers: usersRes.data.totalUsers,  // Set the total users from the new API
+        });
+
       } catch (err) {
         console.error('Failed to fetch stats:', err);
       }
@@ -39,34 +49,23 @@ const StatsSection = () => {
           </div>
 
           <div className="stat bg-white shadow-md rounded-lg p-6">
-
-
             <FaThumbsUp className="text-4xl text-secondary mb-2 mx-auto" />
-
             <div className="stat-title text-gray-500">Total Recommendations</div>
             <div className="stat-value text-secondary">{stats.totalRecommendations}</div>
           </div>
 
           <div className="stat bg-white shadow-md rounded-lg p-6">
-
-
-
-
             <FaUsers className="text-4xl text-accent mb-2 mx-auto" />
-
-
             <div className="stat-title text-gray-500">Unique Users</div>
             <div className="stat-value text-accent">{stats.uniqueUsers}</div>
           </div>
 
           <div className="stat bg-white shadow-md rounded-lg p-6">
-
-
             <LuSquareActivity className="text-4xl text-success mb-2 mx-auto" />
-
             <div className="stat-title text-gray-500">Avg. Recommendations/Query</div>
             <div className="stat-value text-success">{stats.averageRecommendations}</div>
           </div>
+
         </div>
       </div>
     </section>

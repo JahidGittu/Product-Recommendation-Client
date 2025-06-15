@@ -89,11 +89,11 @@ const Navbar = () => {
     const handleLogout = () => {
         logout()
             .then(() => {
-                console.log("signOut")
+                // console.log("signOut")
                 navigate('/');
             })
             .catch(error => {
-                console.log(error)
+                // console.log(error)
             })
     };
 
