@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { AuthContext } from './AuthContext';
 import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from 'firebase/auth';
 import { auth } from '../../Firebase/firebase.init';
+import axios from 'axios';
 
 const googleProvider = new GoogleAuthProvider()
 
 const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true)
-    const [user, setuser] = useState(null)
+    const [user, setUser] = useState(null)
 
     // Create User
     const createUser = (email, password) => {
@@ -27,14 +28,32 @@ const AuthProvider = ({ children }) => {
     // check User
     useEffect(() => {
         const unSubscribe = onAuthStateChanged(auth, currentUser => {
-            setuser(currentUser)
-            setLoading(false)
-            console.log("Current User ", currentUser)
-        })
+            setUser(currentUser);
+            setLoading(false);
+
+            if (currentUser?.email) {
+                const userData = { email: currentUser.email };
+                axios.post('http://localhost:5000/jwt', userData, {
+                    withCredentials: true
+                })
+                    .then(res => {
+                        console.log('JWT response:', res.data);
+                    })
+                    .catch(error => {
+                        console.log('Error with JWT:', error);
+                        setLoading(false);
+                    });
+            }
+
+            console.log('Current User', currentUser);
+        });
+
         return () => {
             unSubscribe();
-        }
-    }, [])
+        };
+    }, []);
+
+
 
     // Google Sign in
     const signinWithGoogle = () => {
@@ -56,7 +75,7 @@ const AuthProvider = ({ children }) => {
         signInUser,
         updateUser,
         user,
-        setuser,
+        setUser,
         signinWithGoogle,
         logout
 

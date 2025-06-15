@@ -15,7 +15,7 @@ const TopRatedProducts = ({topProducts}) => {
                 {topProducts.map(rec => (
                     <div key={rec._id} className="bg-white border border-gray-500 rounded-lg shadow-md p-6 flex flex-col">
                         <img
-                            src={rec.productImage}
+                            src={rec?.productImage}
                             alt={rec.productName}
                             className="w-full h-48 object-cover rounded-md mb-4"
                         />

@@ -12,21 +12,32 @@ const MyQueries = () => {
 
   const { user, loading: authLoading } = useAuth()
 
+
+
   useEffect(() => {
-    if (!authLoading && user?.email) {
-      fetch(`http://localhost:5000/queries?email=${user.email}`)
-        .then(res => res.json())
-        .then(data => {
+    const accessToken = user?.accessToken;
+
+    if (!authLoading && user?.email && accessToken) {
+      setLoading(true);
+
+      fetch(`http://localhost:5000/queries?email=${user.email}`, {
+        credentials: 'include',
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
           setMyQueries(data);
-          console.log(data)
           setLoading(false);
         })
-        .catch(err => {
-          console.error("Error fetching user posts:", err);
+        .catch((err) => {
+          console.error('Error fetching user posts:', err);
           setLoading(false);
         });
     }
   }, [authLoading, user]);
+
 
 
   const handleDelete = (id) => {
@@ -67,7 +78,7 @@ const MyQueries = () => {
 
       {/* Queries Section */}
       {loading ? (
-        <Loading/>
+        <Loading />
       ) : myQueries.length === 0 ? (
         <div className="text-center py-20">
           <p className="text-lg font-medium">No queries found. Want to add one?</p>

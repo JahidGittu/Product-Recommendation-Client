@@ -47,7 +47,7 @@ const Footer = () => {
                 {/* বাম পাশে লোগো এবং স্লোগান */}
                 <div className="flex items-center space-x-4">
                     <img
-                        src="your-logo-url-here"
+                        src="https://i.ibb.co/0yzpyhSQ/WebLogo.png"
                         alt="Website Logo"
                         className="w-16 h-16"
                     />
