@@ -126,7 +126,7 @@ const Home = () => {
                     <Reviews></Reviews>
                 </section>
 
-                <section className='pb-[300px]'>
+                <section>
                     <StatsSection></StatsSection>
                 </section>
 

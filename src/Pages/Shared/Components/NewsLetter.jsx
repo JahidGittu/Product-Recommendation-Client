@@ -39,7 +39,7 @@ const NewsletterSubscription = () => {
     };
 
     return (
-        <div className="relative -top-[350px] lg:-top-[220px] bg-stone-200 rounded-xl flex flex-col lg:flex-row justify-around items-center w-[80%] lg:w-full mx-auto py-5 px-10 z-20">
+        <div className=" bg-stone-200 rounded-xl flex flex-col lg:flex-row justify-around items-center w-[80%] lg:w-full mx-auto py-5 px-10 z-20">
             <div className="w-100">
                 <div className="text-center lg:text-left">
                     <Lottie style={{ width: "300px" }} animationData={newsLetterLottie} loop={true} />
