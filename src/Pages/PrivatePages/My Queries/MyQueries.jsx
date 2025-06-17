@@ -21,7 +21,7 @@ const MyQueries = () => {
     if (!authLoading && user?.email && accessToken) {
       setLoading(true);
 
-      fetch(`http://localhost:5000/queries?email=${user.email}`, {
+      fetch(`https://product-recommendation-server-topaz.vercel.app/queries?email=${user.email}`, {
         headers: {
           authorization: `Bearer ${accessToken}`
         }
@@ -51,7 +51,7 @@ const MyQueries = () => {
       confirmButtonText: "Yes, delete it!"
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:5000/queries/${id}`, {
+        fetch(`https://product-recommendation-server-topaz.vercel.app/queries/${id}`, {
           method: "DELETE"
         })
           .then(res => res.json())

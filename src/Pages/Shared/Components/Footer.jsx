@@ -23,7 +23,7 @@ const Footer = () => {
 
         try {
             // এখানে আপনার API URL দিন
-            const res = await axios.post('http://localhost:5000/subscribe', { email });
+            const res = await axios.post('https://product-recommendation-server-topaz.vercel.app/subscribe', { email });
             setMessage(res.data.message || 'Thank you for subscribing!');
             setEmail('');
         } catch (error) {

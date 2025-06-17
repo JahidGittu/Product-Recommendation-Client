@@ -29,7 +29,7 @@ const UpdateQuery = () => {
 
   // Fetch existing query data
   useEffect(() => {
-    fetch(`http://localhost:5000/queries/${id}`, {
+    fetch(`https://product-recommendation-server-topaz.vercel.app/queries/${id}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'User-Email': userEmail,
@@ -123,7 +123,7 @@ const UpdateQuery = () => {
         productImage: imageUrl,
       };
 
-      const res = await fetch(`http://localhost:5000/queries/${id}`, {
+      const res = await fetch(`https://product-recommendation-server-topaz.vercel.app/queries/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -161,7 +161,7 @@ const UpdateQuery = () => {
       </Helmet>
       <ToastContainer />
       <h2 className="text-3xl font-semibold mb-6 text-center">Update Product Query</h2>
-      <form onSubmit={handleUpdate} className="space-y-6 bg-white shadow-xl rounded-2xl p-6">
+      <form onSubmit={handleUpdate} className="space-y-6 shadow-xl rounded-2xl p-6">
         <div>
           <label htmlFor="queryTitle" className="block font-medium mb-1">
             Query Title

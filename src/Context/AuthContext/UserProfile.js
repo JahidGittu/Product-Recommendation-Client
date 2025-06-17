@@ -20,7 +20,7 @@ const useProfile = () => {
 
   useEffect(() => {
     if (user?.email) {
-      fetch(`http://localhost:5000/users?email=${user.email}`, {
+      fetch(`https://product-recommendation-server-topaz.vercel.app/users?email=${user.email}`, {
         headers: {
           authorization: `Bearer ${accessToken}`
         }

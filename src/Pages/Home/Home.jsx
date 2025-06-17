@@ -20,7 +20,7 @@ const Home = () => {
     useEffect(() => {
         const fetchSliderData = async () => {
             try {
-                const res = await fetch('http://localhost:5000/queries-with-recommendations');
+                const res = await fetch('https://product-recommendation-server-topaz.vercel.app/queries-with-recommendations');
                 const data = await res.json();
 
                 const combined = data.queries.map(query => {
@@ -73,7 +73,7 @@ const Home = () => {
     useEffect(() => {
         const fetchFeaturedRecommendations = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/recommendations/featured');
+                const res = await axios.get('https://product-recommendation-server-topaz.vercel.app/recommendations/featured');
                 setRecommendations(res.data);
             } catch (err) {
                 console.error('Failed to load featured recommendations', err);
@@ -91,7 +91,7 @@ const Home = () => {
     useEffect(() => {
         const fetchTopRated = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/recommendations/top-rated');
+                const res = await axios.get('https://product-recommendation-server-topaz.vercel.app/recommendations/top-rated');
                 setTopProducts(res.data);
             } catch (err) {
                 console.error(err);

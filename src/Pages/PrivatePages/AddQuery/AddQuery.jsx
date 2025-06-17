@@ -96,7 +96,7 @@ const AddQuery = () => {
             recommendationCount: 0,
         };
 
-        axios.post('http://localhost:5000/queries', queryData)
+        axios.post('https://product-recommendation-server-topaz.vercel.app/queries', queryData)
             .then(res => {
                 toast('🦄 Query added successfully!', {
                     position: "top-right",

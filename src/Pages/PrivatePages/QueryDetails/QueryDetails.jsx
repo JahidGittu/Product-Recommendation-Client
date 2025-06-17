@@ -59,7 +59,7 @@ const QueryDetails = () => {
   const saveEdit = async (recId, cmtId) => {
     if (!editText.trim()) return;
     try {
-      await axios.patch(`http://localhost:5000/recommendations/${recId}/comment/${cmtId}`, {
+      await axios.patch(`https://product-recommendation-server-topaz.vercel.app/recommendations/${recId}/comment/${cmtId}`, {
         text: editText.trim(),
       });
       setRecommendations(prev =>
@@ -83,7 +83,7 @@ const QueryDetails = () => {
   const deleteComment = async (recId, cmtId) => {
     if (!window.confirm('Delete this comment?')) return;
     try {
-      await axios.delete(`http://localhost:5000/recommendations/${recId}/comment/${cmtId}`);
+      await axios.delete(`https://product-recommendation-server-topaz.vercel.app/recommendations/${recId}/comment/${cmtId}`);
       setRecommendations(prev =>
         prev.map(r =>
           r._id === recId
@@ -106,8 +106,8 @@ const QueryDetails = () => {
   //   setLoading(true);
 
   //   Promise.all([
-  //     fetch(`http://localhost:5000/queries/${id}`).then(res => res.json()),
-  //     fetch(`http://localhost:5000/recommendations?queryId=${id}`).then(res => res.json()),
+  //     fetch(`https://product-recommendation-server-topaz.vercel.app/queries/${id}`).then(res => res.json()),
+  //     fetch(`https://product-recommendation-server-topaz.vercel.app/recommendations?queryId=${id}`).then(res => res.json()),
   //   ])
   //     .then(([queryData, recs]) => {
   //       setQuery(queryData);
@@ -137,14 +137,14 @@ const QueryDetails = () => {
 
     // এক্সেস টোকেন সহ API কল
     Promise.all([
-      fetch(`http://localhost:5000/queries/${id}`, {
+      fetch(`https://product-recommendation-server-topaz.vercel.app/queries/${id}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           'User-Email': userEmail,
         }
       }).then(res => res.json()),
 
-      fetch(`http://localhost:5000/recommendations?queryId=${id}`, {
+      fetch(`https://product-recommendation-server-topaz.vercel.app/recommendations?queryId=${id}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           'User-Email': userEmail,
@@ -259,7 +259,7 @@ const QueryDetails = () => {
 
     /* Persist to backend */
     try {
-      const res = await fetch(`http://localhost:5000/recommendations`, {
+      const res = await fetch(`https://product-recommendation-server-topaz.vercel.app/recommendations`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newRec),
@@ -268,7 +268,7 @@ const QueryDetails = () => {
 
       if (data.insertedId) {
 
-        await axios.patch(`http://localhost:5000/queries/${id}`, { increment: true });
+        await axios.patch(`https://product-recommendation-server-topaz.vercel.app/queries/${id}`, { increment: true });
         setQuery(prev => ({
           ...prev,
           recommendationCount: prev.recommendationCount + 1
@@ -318,7 +318,7 @@ const QueryDetails = () => {
     });
 
     try {
-      await axios.patch(`http://localhost:5000/recommendations/${recId}/like`, {
+      await axios.patch(`https://product-recommendation-server-topaz.vercel.app/recommendations/${recId}/like`, {
         userEmail: user.email,
       });
 
@@ -359,7 +359,7 @@ const QueryDetails = () => {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/recommendations/${recId}/comment`,
+        `https://product-recommendation-server-topaz.vercel.app/recommendations/${recId}/comment`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

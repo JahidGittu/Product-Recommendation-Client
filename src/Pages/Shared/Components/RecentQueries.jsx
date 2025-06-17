@@ -9,7 +9,7 @@ const RecentQueries = () => {
     useEffect(() => {
         const fetchRecentQueries = async () => {
             try {
-                const res = await fetch(`http://localhost:5000/queries/recents?limit=6`);
+                const res = await fetch(`https://product-recommendation-server-topaz.vercel.app/queries/recents?limit=6`);
                 const data = await res.json();
                 setQueries(data);
             } catch (error) {

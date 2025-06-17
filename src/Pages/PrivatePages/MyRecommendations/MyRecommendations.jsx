@@ -28,7 +28,7 @@ const MyRecommendations = () => {
     if (!activeRec?._id) return;
 
     axios
-      .get(`http://localhost:5000/reviews/by-recommendation/${activeRec._id}`)
+      .get(`https://product-recommendation-server-topaz.vercel.app/reviews/by-recommendation/${activeRec._id}`)
       .then((res) => setReviews(res.data))
       .catch(() => setReviews([]));
   }, [activeRec]);
@@ -41,7 +41,7 @@ const MyRecommendations = () => {
     setLoading(true);
 
     axios
-      .get(`http://localhost:5000/recommendations`, {
+      .get(`https://product-recommendation-server-topaz.vercel.app/recommendations`, {
         headers: {
           authorization: `Bearer ${accessToken}`,
         },
@@ -76,10 +76,10 @@ const MyRecommendations = () => {
         if (!result.isConfirmed) return;
 
         axios
-          .delete(`http://localhost:5000/recommendations/${recId}`)
+          .delete(`https://product-recommendation-server-topaz.vercel.app/recommendations/${recId}`)
           .then(() => {
             // Decrement recommendation count on the query
-            axios.patch(`http://localhost:5000/queries/${queryId}`, { decrement: true });
+            axios.patch(`https://product-recommendation-server-topaz.vercel.app/queries/${queryId}`, { decrement: true });
             setRecs((prev) => prev.filter((r) => r._id !== recId));
             Swal.fire('Deleted!', 'Your recommendation was deleted.', 'success');
           })

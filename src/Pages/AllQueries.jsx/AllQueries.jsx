@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { Helmet } from "react-helmet";
 import { useNavigate } from "react-router";
+import Loading from "../Shared/Loading/Loading";
 
 const AllQueries = () => {
   const [queries, setQueries] = useState([]);
@@ -13,8 +14,7 @@ const AllQueries = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // No authentication needed here, no token required
-    fetch("http://localhost:5000/queries/all")  // Just get the queries
+    fetch("https://product-recommendation-server-topaz.vercel.app/queries/all")  // Just get the queries
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch queries");
         return res.json();
@@ -49,13 +49,17 @@ const AllQueries = () => {
     }
   }, [queries, sortBy]);
 
+  const handleToggleChange = (columns) => {
+    setGridColumns(columns); // Update gridColumns state to control layout
+  };
+
   const filteredQueries = useMemo(() => {
     return sortedQueries.filter((q) =>
       q.productName.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [sortedQueries, searchTerm]);
 
-  if (loading) return <p className="mt-24 text-center">Loading queries...</p>;
+  if (loading) return <Loading></Loading>;
   if (error) return <p className="mt-24 text-center text-red-500">Error: {error}</p>;
   if (!queries.length)
     return <p className="mt-24 text-center">No queries found. Please check back later.</p>;
@@ -65,7 +69,6 @@ const AllQueries = () => {
       <Helmet>
         <title>All Queries | Recommend Product</title>
       </Helmet>
-      {/* ---------- Heading ---------- */}
       <h2 className="text-3xl font-bold text-center mb-8">All Queries</h2>
 
       {/* ---------- Controls Section ---------- */}
@@ -90,38 +93,54 @@ const AllQueries = () => {
             onChange={(e) => setSortBy(e.target.value)}
             className="rounded border p-2"
           >
-            <option value="newest">Newest First</option>
-            <option value="oldest">Oldest First</option>
-            <option value="topRec">Top Recommendations</option>
-            <option value="leastRec">Least Recommendations</option>
-            <option value="alphaAZ">Product A → Z</option>
-            <option value="alphaZA">Product Z → A</option>
+            <option className="bg-base-300" value="newest">Newest First</option>
+            <option className="bg-base-300" value="oldest">Oldest First</option>
+            <option className="bg-base-300" value="topRec">Top Recommendations</option>
+            <option className="bg-base-300" value="leastRec">Least Recommendations</option>
+            <option className="bg-base-300" value="alphaAZ">Product A → Z</option>
+            <option className="bg-base-300" value="alphaZA">Product Z → A</option>
           </select>
         </div>
-
       </div>
 
-      {/* 🧲 Fancy Layout Toggle Buttons */}
-      <div className="flex justify-center items-center pb-6 gap-1">
-        {[1, 2, 3].map((n) => (
-          <button
-            key={n}
-            onClick={() => setGridColumns(n)}
-            className={`px-3 py-1 border rounded font-semibold text-sm ${gridColumns === n
-              ? "bg-blue-600 text-white"
-              : "bg-gray-100 text-gray-700"
-              }`}
-          >
-            {n} Col
-          </button>
-        ))}
+      {/* 🧲 Fancy Layout Toggle Switch */}
+      <div className="flex justify-center items-center py-6 gap-6">
+        <label className="relative">
+          <input
+            type="checkbox"
+            checked={gridColumns === 1}
+            onChange={() => handleToggleChange(1)}
+            className="toggle toggle-success"
+          />
+          <span className="absolute -top-6 right-1/2 active:text-accent z-10">1</span>
+        </label>
+
+        <label className="relative">
+          <input
+            type="checkbox"
+            checked={gridColumns === 2}
+            onChange={() => handleToggleChange(2)}
+            className="toggle toggle-success"
+          />
+          <span className="absolute -top-6 right-1/2 active:text-accent z-10">2</span>
+        </label>
+
+        <label className="relative">
+          <input
+            type="checkbox"
+            checked={gridColumns === 3}
+            onChange={() => handleToggleChange(3)}
+            className="toggle toggle-success"
+          />
+          <span className="absolute -top-6 right-1/2 active:text-accent z-10">3</span>
+        </label>
       </div>
 
       {/* ---------- Grid View ---------- */}
       {filteredQueries.length === 0 ? (
         <p className="text-center text-gray-500">No queries match your search.</p>
       ) : (
-        <div className={`grid gap-6 grid-cols-1 ${gridColumns >= 2 ? "sm:grid-cols-2" : ""} ${gridColumns >= 3 ? "lg:grid-cols-3" : ""}`}>
+        <div className={`grid gap-6 grid-cols-1 ${gridColumns === 2 ? "sm:grid-cols-2" : ""} ${gridColumns === 3 ? "lg:grid-cols-3" : ""}`}>
           {filteredQueries.map((q) => (
             <div
               key={q._id}
@@ -156,7 +175,6 @@ const AllQueries = () => {
                 Recommend
               </button>
             </div>
-
           ))}
         </div>
       )}

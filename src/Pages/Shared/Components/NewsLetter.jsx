@@ -20,7 +20,7 @@ const NewsletterSubscription = () => {
         setMessage('');
 
         try {
-            const res = await axios.post('http://localhost:5000/subscribe', { email });
+            const res = await axios.post('https://product-recommendation-server-topaz.vercel.app/subscribe', { email });
             setMessage(res.data.message);
             setEmail('');
         } catch (error) {

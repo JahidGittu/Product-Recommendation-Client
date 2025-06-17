@@ -17,10 +17,10 @@ const StatsSection = () => {
     const fetchStats = async () => {
       try {
         // Fetch platform stats
-        const statsRes = await axios.get('http://localhost:5000/stats');
+        const statsRes = await axios.get('https://product-recommendation-server-topaz.vercel.app/stats');
 
         // Fetch user stats (user count)
-        const usersRes = await axios.get('http://localhost:5000/users/stats');  // New API for users stats
+        const usersRes = await axios.get('https://product-recommendation-server-topaz.vercel.app/users/stats');  // New API for users stats
 
         // Combine both responses into stats state
         setStats({

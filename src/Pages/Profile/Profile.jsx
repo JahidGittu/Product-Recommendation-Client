@@ -6,7 +6,7 @@ import Loading from '../Shared/Loading/Loading';
 
 const Profile = () => {
   const { user, updateUser } = useAuth();
-
+  const [initialData, setInitialData] = useState(null);
   const [profileData, setProfileData] = useState({
     fullName: '',
     dob: '',
@@ -18,26 +18,35 @@ const Profile = () => {
     hobbies: '',
   });
 
+  const [isUpdating, setIsUpdating] = useState(false);
+
   const accessToken = user?.accessToken;
+  
   const imgBbAPiKey = import.meta.env.VITE_IMGBB_API_KEY;
 
-  // Fetch user profile data from server
   useEffect(() => {
     if (user?.email) {
       const fetchData = async () => {
         try {
-          const res = await fetch(`http://localhost:5000/users?email=${user.email}`, {
-            headers: {
-              authorization: `Bearer ${accessToken}`,
-            },
-          });
+          const res = await fetch(
+            `https://product-recommendation-server-topaz.vercel.app/users?email=${user.email}`,
+            {
+              headers: {
+                authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
           const data = await res.json();
           if (data) {
-            setProfileData(prev => ({
-              ...prev,
+            const fullData = {
               ...data,
               fullName: data.fullName || user.displayName || '',
               photo: data.photo || user.photoURL || '',
+            };
+            setInitialData(fullData);
+            setProfileData(prev => ({
+              ...prev,
+              ...fullData,
             }));
           }
         } catch (error) {
@@ -48,13 +57,12 @@ const Profile = () => {
     }
   }, [user?.email, accessToken, user?.displayName, user?.photoURL]);
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     const { name, value } = e.target;
     setProfileData(prev => ({ ...prev, [name]: value }));
   };
 
-  // Handle Image Upload to ImgBB API
-  const handleImageChange = async (e) => {
+  const handleImageChange = async e => {
     const file = e.target.files[0];
     if (file) {
       const imageUrl = await uploadImageToImgBB(file);
@@ -62,16 +70,18 @@ const Profile = () => {
     }
   };
 
-  // Function to upload image to ImgBB
-  const uploadImageToImgBB = async (file) => {
+  const uploadImageToImgBB = async file => {
     const formData = new FormData();
     formData.append('image', file);
 
     try {
-      const response = await fetch(`https://api.imgbb.com/1/upload?key=${imgBbAPiKey}`, {
-        method: 'POST',
-        body: formData,
-      });
+      const response = await fetch(
+        `https://api.imgbb.com/1/upload?key=${imgBbAPiKey}`,
+        {
+          method: 'POST',
+          body: formData,
+        }
+      );
       const data = await response.json();
       if (!data.success) throw new Error('Image upload failed');
       return data.data.url;
@@ -81,15 +91,50 @@ const Profile = () => {
     }
   };
 
-  // Handle Profile Update (Save changes to server)
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
+    setIsUpdating(true);
+
     const payload = { ...profileData, email: user.email };
 
-    // Firebase profile update using updateUser
-    if (profileData.fullName !== user.displayName || profileData.photo !== user.photoURL) {
-      try {
-        await updateUser({ displayName: profileData.fullName, photoURL: profileData.photo });
+    // Check if anything changed
+    const somethingChanged = Object.keys(profileData).some(key => {
+      if (key === 'email') return false;
+      return profileData[key] !== initialData?.[key];
+    });
+
+    const hasFirebaseChanges =
+      profileData.fullName !== user.displayName ||
+      profileData.photo !== user.photoURL;
+
+    try {
+      const res = await fetch(
+        'https://product-recommendation-server-topaz.vercel.app/users',
+        {
+          method: 'PUT',
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+            'content-type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      const result = await res.json().catch(() => ({}));
+      const modified = result?.modifiedCount > 0;
+
+      if (hasFirebaseChanges) {
+        try {
+          await updateUser({
+            displayName: profileData.fullName,
+            photoURL: profileData.photo,
+          });
+        } catch (err) {
+          console.error('Firebase profile update failed:', err);
+        }
+      }
+
+      if (somethingChanged || hasFirebaseChanges || modified) {
         toast('🦄 Profile updated successfully!', {
           position: 'top-right',
           autoClose: 5000,
@@ -97,39 +142,37 @@ const Profile = () => {
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          theme: 'auto',
+          theme: 'light',
           transition: Bounce,
         });
-      } catch (error) {
-        console.error("Error updating Firebase profile:", error);
-        toast.error("Failed to update Firebase profile");
+        setInitialData(profileData); // Update reference after success
+      } else {
+        toast.info('No changes were made.', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: 'light',
+          transition: Bounce,
+        });
       }
-    }
-
-    // Update server profile
-    fetch('http://localhost:5000/users', {
-      method: 'PUT',
-      headers: {
-        authorization: `Bearer ${accessToken}`,
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data?.acknowledged || data?.modifiedCount >= 0) {
-          toast('🦄 Profile updated successfully!', {
-            position: 'top-right',
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            theme: 'light',
-            transition: Bounce,
-          });
-        }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast.error('প্রোফাইল আপডেট করতে গিয়ে ত্রুটি ঘটেছে।', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: 'light',
+        transition: Bounce,
       });
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
   return (
@@ -138,10 +181,11 @@ const Profile = () => {
         <title>My Profile | Roommate Finder</title>
       </Helmet>
       <ToastContainer />
-      <h2 className="text-2xl md:text-3xl font-bold mb-8 text-center text-primary">👤 My Profile</h2>
+      <h2 className="text-2xl md:text-3xl font-bold mb-8 text-center text-primary">
+        👤 My Profile
+      </h2>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Profile Picture */}
         <div className="flex flex-col items-center gap-4 bg-base-200 p-6 rounded-xl shadow-md">
           <label className="text-lg font-semibold">Profile Picture</label>
           <div className="relative w-28 h-28">
@@ -163,7 +207,6 @@ const Profile = () => {
               </div>
             )}
           </div>
-
           <input
             type="file"
             accept="image/*"
@@ -172,14 +215,13 @@ const Profile = () => {
           />
         </div>
 
-        {/* Other Profile Fields */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-base-200 p-4 rounded-xl border border-base-300">
             <label className="block mb-1 font-medium">Full Name</label>
             <input
               name="fullName"
               type="text"
-              value={profileData.fullName || user.displayName || ''}
+              value={profileData.fullName}
               onChange={handleChange}
               required
               className="input w-full"
@@ -190,7 +232,7 @@ const Profile = () => {
             <label className="block mb-1 font-medium">Gender</label>
             <select
               name="gender"
-              value={profileData.gender || ''}
+              value={profileData.gender}
               onChange={handleChange}
               required
               className="select w-full"
@@ -207,7 +249,7 @@ const Profile = () => {
             <input
               name="dob"
               type="date"
-              value={profileData.dob || ''}
+              value={profileData.dob}
               onChange={handleChange}
               required
               className="input w-full"
@@ -219,7 +261,7 @@ const Profile = () => {
             <input
               name="phone"
               type="text"
-              value={profileData.phone || ''}
+              value={profileData.phone}
               onChange={handleChange}
               required
               className="input w-full"
@@ -227,14 +269,17 @@ const Profile = () => {
           </div>
 
           <div className="bg-base-200 p-4 rounded-xl border border-base-300">
-            <label className="block mb-1 font-medium">Hobbies (comma-separated)</label>
+            <label className="block mb-1 font-medium">
+              Hobbies (comma-separated)
+            </label>
             <input
               name="hobbies"
               type="text"
-              value={profileData.hobbies || ''}
+              value={profileData.hobbies}
               onChange={handleChange}
-              className="input w-full"
+              required
               placeholder="e.g., Reading, Travelling, Coding"
+              className="input w-full"
             />
           </div>
 
@@ -254,7 +299,7 @@ const Profile = () => {
             <textarea
               name="address"
               rows="3"
-              value={profileData.address || ''}
+              value={profileData.address}
               onChange={handleChange}
               required
               className="textarea w-full"
@@ -265,8 +310,9 @@ const Profile = () => {
         <button
           type="submit"
           className="btn btn-primary w-full mt-4 text-lg"
+          disabled={isUpdating}
         >
-          Save / Update Profile
+          {isUpdating ? 'আপডেট হচ্ছে...' : 'Save / Update Profile'}
         </button>
       </form>
     </div>

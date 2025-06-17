@@ -30,7 +30,7 @@ export default function RecoForMe() {
     if (!user?.email) return;
     setLoading(true);
     axios
-      .get(`http://localhost:5000/recommendations/for-me`, {
+      .get(`https://product-recommendation-server-topaz.vercel.app/recommendations/for-me`, {
         headers: { Authorization: `Bearer ${accessToken}` },
         params: { email: user.email },
       })
@@ -42,8 +42,8 @@ export default function RecoForMe() {
   const handleDelete = async rec => {
     if (!confirm('Delete this recommendation?')) return;
     try {
-      await axios.delete(`http://localhost:5000/recommendations/${rec._id}`);
-      await axios.patch(`http://localhost:5000/queries/${rec.queryId}`, {
+      await axios.delete(`https://product-recommendation-server-topaz.vercel.app/recommendations/${rec._id}`);
+      await axios.patch(`https://product-recommendation-server-topaz.vercel.app/queries/${rec.queryId}`, {
         decrement: true,
       });
       setRecs(prev => prev.filter(r => r._id !== rec._id));
@@ -54,7 +54,7 @@ export default function RecoForMe() {
 
   const handleLike = async id => {
     try {
-      await axios.patch(`http://localhost:5000/recommendations/${id}/like`, {
+      await axios.patch(`https://product-recommendation-server-topaz.vercel.app/recommendations/${id}/like`, {
         email: user.email,
       });
       setRecs(prev =>
@@ -99,7 +99,7 @@ export default function RecoForMe() {
         createdAt: new Date().toISOString(),
       };
 
-      await axios.post('http://localhost:5000/reviews', payload);
+      await axios.post('https://product-recommendation-server-topaz.vercel.app/reviews', payload);
       toast.success('রিভিউ সফলভাবে যুক্ত হয়েছে!');
       setReviewText('');
       setRating(null);
@@ -135,7 +135,7 @@ export default function RecoForMe() {
 
   const loadReviews = async (id) => {
     try {
-      const res = await axios.get(`http://localhost:5000/reviews/by-recommendation/${id}`);
+      const res = await axios.get(`https://product-recommendation-server-topaz.vercel.app/reviews/by-recommendation/${id}`);
       setReviews(res.data);
       setHasUserReviewed(res.data.some(r => r.userEmail === user.email));
     } catch {

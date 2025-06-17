@@ -11,7 +11,7 @@ const Reviews = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("http://localhost:5000/reviews");
+        const res = await fetch("https://product-recommendation-server-topaz.vercel.app/reviews");
         const data = await res.json();
 
         const enriched = data.map((review) => ({
