@@ -4,6 +4,7 @@ import { motion, useAnimation } from "framer-motion";
 import Wave from "react-wavify";
 import heroImage from "../../../assets/Lotties/Hero.json";
 import backgroundImage from "../../../assets/images/HeroBg.png";
+import { Link } from "react-router";
 
 // Sentences and their animated keywords
 const sentences = [
@@ -145,7 +146,7 @@ const Hero = () => {
           community for finding better product alternatives through experience-backed advice.
         </p>
 
-        <button className="btn btn-primary">Explore Queries</button>
+        <Link to="/queries"><button className="btn btn-primary">Explore Queries</button></Link>
       </div>
 
       <div className="w-full md:w-1/2 flex items-center justify-center px-4 py-8 z-5">
