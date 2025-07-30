@@ -15,7 +15,7 @@ The **Product Recommendation Client** is the frontend part of a **Product Recomm
 
 ## Live Demo
 
-[Insert Live Demo URL Here]
+[https://product-recommendation-pro.web.app/]
 
 ## GitHub Repository
 
