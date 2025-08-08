@@ -12,9 +12,8 @@ A community-driven product recommendation system with query management, boycott 
 
 🔗 <a href="https://product-recommendation-pro.web.app/" target="_blank">Click Here to Visit</a>
 
-Client Side :-  https://github.com/JahidGittu/Product-Recommendation-Client
-
-Server Side :- https://github.com/JahidGittu/Product-Recommendation-Server
+🔗 **Client Repository:** [Client on GitHub](https://github.com/JahidGittu/Product-Recommendation-Client)  
+🔗 **Server Repository:** [Server on GitHub](https://github.com/JahidGittu/Product-Recommendation-Server)
 
 
 
