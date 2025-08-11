@@ -110,7 +110,7 @@ const Home = () => {
                 <Hero></Hero>
             </header>
             <main>
-                <section className='my-24'>
+                <section className='my-24 max-w-7xl mx-auto'>
                     <Banner sliderData={sliderData} activeIndex={activeIndex} setActiveIndex={setActiveIndex}></Banner>
                 </section>
 
