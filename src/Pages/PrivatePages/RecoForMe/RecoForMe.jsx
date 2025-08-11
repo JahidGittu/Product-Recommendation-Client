@@ -10,7 +10,6 @@ import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
 import { Helmet } from 'react-helmet';
 
-
 export default function RecoForMe() {
   const { user } = useAuth();
   const [recs, setRecs] = useState([]);
@@ -26,7 +25,7 @@ export default function RecoForMe() {
   const [hasUserReviewed, setHasUserReviewed] = useState(false);
 
   useEffect(() => {
-    const accessToken = user?.accessToken
+    const accessToken = user?.accessToken;
     if (!user?.email) return;
     setLoading(true);
     axios
@@ -40,15 +39,16 @@ export default function RecoForMe() {
   }, [user?.email]);
 
   const handleDelete = async rec => {
-    if (!confirm('Delete this recommendation?')) return;
+    if (!confirm('Are you sure you want to delete this recommendation?')) return;
     try {
       await axios.delete(`https://product-recommendation-server-topaz.vercel.app/recommendations/${rec._id}`);
       await axios.patch(`https://product-recommendation-server-topaz.vercel.app/queries/${rec.queryId}`, {
         decrement: true,
       });
       setRecs(prev => prev.filter(r => r._id !== rec._id));
+      toast.success('Recommendation deleted successfully');
     } catch {
-      alert('Delete failed');
+      toast.error('Delete failed');
     }
   };
 
@@ -61,11 +61,11 @@ export default function RecoForMe() {
         prev.map(r =>
           r._id === id
             ? {
-              ...r,
-              likes: r.likes.includes(user.email)
-                ? r.likes.filter(e => e !== user.email)
-                : [...r.likes, user.email],
-            }
+                ...r,
+                likes: r.likes.includes(user.email)
+                  ? r.likes.filter(e => e !== user.email)
+                  : [...r.likes, user.email],
+              }
             : r
         )
       );
@@ -119,32 +119,32 @@ export default function RecoForMe() {
   const getColorClass = num => {
     switch (num) {
       case 1:
-        return 'bg-red-400';
+        return 'bg-error text-error-content';
       case 2:
-        return 'bg-orange-400';
+        return 'bg-warning text-warning-content';
       case 3:
-        return 'bg-yellow-400';
+        return 'bg-yellow-400 text-black';
       case 4:
-        return 'bg-lime-400';
+        return 'bg-success text-success-content';
       case 5:
-        return 'bg-green-400';
+        return 'bg-primary text-primary-content';
       default:
-        return 'bg-gray-300';
+        return 'bg-neutral text-neutral-content';
     }
   };
 
-  const loadReviews = async (id) => {
+  const loadReviews = async id => {
     try {
       const res = await axios.get(`https://product-recommendation-server-topaz.vercel.app/reviews/by-recommendation/${id}`);
       setReviews(res.data);
-      setHasUserReviewed(res.data.some(r => r.userEmail === user.email));
+      setHasUserReviewed(res.data.some(r => r.reviewerEmail === user.email));
     } catch {
       setReviews([]);
       setHasUserReviewed(false);
     }
   };
 
-  const handleView = async (rec) => {
+  const handleView = async rec => {
     setModal(rec);
     setReviewText('');
     setRating(null);
@@ -153,46 +153,63 @@ export default function RecoForMe() {
     await loadReviews(rec._id);
   };
 
-
   const grid = useMemo(() => 'grid gap-6 sm:grid-cols-2 lg:grid-cols-3', []);
 
   if (loading) return <Loading />;
-  if (error) return <p className="text-center text-red-500">{error}</p>;
-  if (!recs.length) return < div className='pt-36 space-y-10'>
-
-    <p className="text-2xl md:text-3xl font-bold text-center">No recommendations from others yet.</p>
-    {/* <p className="text-2xl md:text-3xl font-bold text-center"> Maybe You Have no Queries  </p>
-    <Link to="/add-Query">
-      <button className="btn btn-active mt-4 flex justify-center max-w-md mx-auto bg-white text-blue-600 hover:bg-gray-100">➕ Add New Query</button>
-    </Link> */}
-  </div>;
+  if (error)
+    return (
+      <p className="text-center text-error font-semibold mt-20 text-lg">
+        {error}
+      </p>
+    );
+  if (!recs.length)
+    return (
+      <div className="pt-36 space-y-10 text-center">
+        <p className="text-2xl md:text-3xl font-bold">
+          No recommendations from others yet.
+        </p>
+        {/* Uncomment below if you want to encourage adding queries */}
+        {/* <p className="text-lg mt-2">Maybe you have no queries.</p>
+        <Link to="/add-Query">
+          <button className="btn btn-outline btn-primary mt-4">
+            ➕ Add New Query
+          </button>
+        </Link> */}
+      </div>
+    );
 
   return (
-    <div className="bg-base-100 p-4 md:p-6 lg:p-8 max-w-7xl mx-auto mt-20 space-y-6">
+    <div className="bg-base-100 p-4 md:p-6 lg:p-8 max-w-7xl mx-auto mt-20 space-y-6 rounded-lg shadow-lg">
       <Helmet>
-        <title>Recomendation For Me | Recommend Product</title>
+        <title>Recommendations For Me | Recommend Product</title>
       </Helmet>
-      <h2 className="text-2xl md:text-3xl font-bold text-center">Recommendations For Me</h2>
+      <h2 className="text-2xl md:text-3xl font-bold text-center mb-6">
+        Recommendations For Me
+      </h2>
 
-      <div className="flex justify-center gap-3">
+      <div className="flex justify-center gap-3 mb-4">
         {['table', 'card'].map(v => (
           <button
             key={v}
-            className={`btn btn-sm md:btn ${view === v ? 'btn-primary' : 'btn-outline'}`}
+            className={`btn btn-sm md:btn ${
+              view === v ? 'btn-primary' : 'btn-outline'
+            }`}
             onClick={() => setView(v)}
+            aria-pressed={view === v}
           >
             {v === 'table' ? 'Table View' : 'Card View'}
           </button>
         ))}
       </div>
 
+      {/* TABLE VIEW */}
       {view === 'table' && (
-        <div className="hidden sm:block overflow-x-auto">
-          <table className="min-w-full table shadow-xl rounded-lg text-sm">
+        <div className="overflow-x-auto sm:block hidden rounded-lg">
+          <table className="min-w-full table-zebra table rounded-lg">
             <thead>
-              <tr className="bg-base-300 text-left">
+              <tr className="bg-base-300 text-base-content font-semibold">
                 {['Recommendation', 'Product', 'Query', 'By', 'Date', 'Action'].map(h => (
-                  <th key={h} className="py-2 px-3">
+                  <th key={h} className="py-3 px-4 whitespace-nowrap">
                     {h}
                   </th>
                 ))}
@@ -200,26 +217,37 @@ export default function RecoForMe() {
             </thead>
             <tbody>
               {recs.map(r => (
-                <tr key={r._id} className="border-t">
-                  <td className="py-2 px-3">{r.recommendationTitle}</td>
-                  <td className="py-2 px-3">{r.productName}</td>
-                  <td className="py-2 px-3">{r.queryTitle}</td>
-                  <td className="py-2 px-3">{r.recommenderName}</td>
-                  <td className="py-2 px-3">{new Date(r.timestamp).toLocaleDateString()}</td>
-                  <td className="py-2 px-3 text-center">
-                    <div className="inline-flex gap-2">
-                      <button className="btn btn-xs btn-outline" onClick={() => handleView(r)}>
-                        <FaRegEye size={14} />
-                      </button>
-                      <button className="btn btn-xs btn-error text-white" onClick={() => handleDelete(r)}>
-                        <MdDelete size={14} />
-                      </button>
+                <tr key={r._id} className="border-t border-base-300 hover:bg-base-200 cursor-pointer transition-colors duration-150">
+                  <td className="py-3 px-4">{r.recommendationTitle}</td>
+                  <td className="py-3 px-4">{r.productName}</td>
+                  <td className="py-3 px-4">{r.queryTitle}</td>
+                  <td className="py-3 px-4">{r.recommenderName}</td>
+                  <td className="py-3 px-4">{new Date(r.timestamp).toLocaleDateString()}</td>
+                  <td className="py-3 px-4 text-center space-x-2">
+                    <div>
                       <button
-                        className={`btn btn-xs ${r.likes.includes(user.email) ? 'btn-secondary' : 'btn-outline'}`}
-                        onClick={() => handleLike(r._id)}
-                      >
-                        <FaHeart className="text-pink-500" /> {r.likes.length}
-                      </button>
+                      className="btn btn-xs btn-outline btn-info"
+                      aria-label="View details"
+                      onClick={() => handleView(r)}
+                    >
+                      <FaRegEye size={16} />
+                    </button>
+                    <button
+                      className="btn btn-xs btn-outline btn-error"
+                      aria-label="Delete recommendation"
+                      onClick={() => handleDelete(r)}
+                    >
+                      <MdDelete size={18} />
+                    </button>
+                    <button
+                      className={`btn btn-xs ${
+                        r.likes.includes(user.email) ? 'btn-secondary' : 'btn-outline'
+                      }`}
+                      aria-label={r.likes.includes(user.email) ? 'Unlike' : 'Like'}
+                      onClick={() => handleLike(r._id)}
+                    >
+                      <FaHeart className="text-pink-500" /> {r.likes.length}
+                    </button>
                     </div>
                   </td>
                 </tr>
@@ -229,153 +257,207 @@ export default function RecoForMe() {
         </div>
       )}
 
+      {/* CARD VIEW */}
       {(view === 'card' || view === 'table') && (
         <div className={`${view === 'table' ? 'sm:hidden' : ''} ${grid}`}>
           {recs.map(r => (
-            <div key={r._id} className="shadow border border-r-gray-700 rounded-xl p-4 flex flex-col">
-              <h3 className="text-lg font-semibold">{r.recommendationTitle}</h3>
-              <p className="text-sm ">
-                <strong>Product:</strong> {r.productName}
+            <article
+              key={r._id}
+              className="border border-base-300 rounded-xl p-5 shadow-md flex flex-col bg-card-bg hover:shadow-lg transition-shadow duration-300"
+              tabIndex={0}
+              aria-label={`Recommendation: ${r.recommendationTitle}`}
+            >
+              <h3 className="text-lg font-semibold mb-2 text-base-content">{r.recommendationTitle}</h3>
+              <p className="text-sm text-base-content">
+                <strong>Product: </strong> {r.productName}
               </p>
-              <p className="text-sm ">
-                <strong>Query:</strong> {r.queryTitle}
+              <p className="text-sm text-base-content">
+                <strong>Query: </strong> {r.queryTitle}
               </p>
-              <p className="text-sm ">
-                <strong>By:</strong> {r.recommenderName}
+              <p className="text-sm text-base-content">
+                <strong>By: </strong> {r.recommenderName}
               </p>
-              <p className="text-xs  mt-1">{new Date(r.timestamp).toLocaleDateString()}</p>
+              <p className="text-xs mt-1 text-base-content">{new Date(r.timestamp).toLocaleDateString()}</p>
               <div className="mt-auto flex gap-2 pt-4">
-                <button className="flex-1 btn btn-sm btn-outline" onClick={() => handleView(r)}>
+                <button
+                  className="flex-1 btn btn-sm btn-outline btn-info"
+                  aria-label="View details"
+                  onClick={() => handleView(r)}
+                >
                   View <FaRegEye className="ml-1" />
                 </button>
                 <button
-                  className={`btn btn-sm ${r.likes.includes(user.email) ? 'btn-secondary' : 'btn-outline'}`}
+                  className={`btn btn-sm ${
+                    r.likes.includes(user.email) ? 'btn-secondary' : 'btn-outline'
+                  }`}
+                  aria-label={r.likes.includes(user.email) ? 'Unlike' : 'Like'}
                   onClick={() => handleLike(r._id)}
                 >
                   <FaHeart className="text-pink-500" /> {r.likes.length}
                 </button>
-                <button className="btn btn-sm bg-red-500 text-white hover:bg-red-600" onClick={() => handleDelete(r)}>
+                <button
+                  className="btn btn-sm btn-error text-white hover:bg-error-focus"
+                  aria-label="Delete recommendation"
+                  onClick={() => handleDelete(r)}
+                >
                   <MdDelete />
                 </button>
               </div>
-            </div>
+            </article>
           ))}
         </div>
       )}
 
+      {/* MODAL */}
       {modal && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center p-4 sm:pt-10">
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={handleCloseModal} />
-          <button
-            className="absolute top-4 right-4 sm:top-6 sm:right-6 bg-gray-400 text-white w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xl sm:text-2xl"
+        <div
+          className="fixed inset-0 z-50 flex items-start justify-center p-4 sm:pt-10"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-title"
+        >
+          <div
+            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
             onClick={handleCloseModal}
+            aria-hidden="true"
+          />
+          <button
+            className="absolute top-4 right-4 sm:top-6 sm:right-6 bg-base-300 text-base-content w-10 h-10 rounded-full flex items-center justify-center text-3xl font-bold shadow-md hover:bg-base-400 transition-colors duration-200"
+            onClick={handleCloseModal}
+            aria-label="Close modal"
           >
             &times;
           </button>
-          <div className="relative w-full max-w-lg bg-base-300 border border-r-gray-600 rounded-xl shadow-lg max-h-[90vh] overflow-y-auto">
+          <div className="relative w-full max-w-lg bg-base-100 border border-base-300 rounded-xl shadow-lg max-h-[90vh] overflow-y-auto focus:outline-none p-6">
             {modal.productImage && (
-              <img src={modal.productImage} alt={modal.productName} className="w-full h-48 object-cover rounded-t-xl" />
+              <img
+                src={modal.productImage}
+                alt={modal.productName}
+                className="w-full h-48 object-cover rounded-lg mb-5"
+              />
             )}
-            <div className="p-6 space-y-4 text-sm sm:text-base">
-              <h3 className="text-xl font-semibold">{modal.recommendationTitle}</h3>
-              <p>
-                <strong>Product:</strong> {modal.productName}
-              </p>
-              <p>
-                <strong>Query:</strong>{' '}
-                <Link to={`/query-details/${modal.queryId}`} className="link link-primary">
-                  {modal.queryTitle}
-                </Link>
-              </p>
-              <p className="whitespace-pre-line">{modal.recommendationReason}</p>
-              <p className="text-xs text-gray-500">
-                By {modal.recommenderName} · {new Date(modal.timestamp).toLocaleString()}
-              </p>
-
-
-              <button
-                id="review-btn"
-                className={`btn btn-success btn-sm w-full ${hasUserReviewed ? ' cursor-not-allowed opacity-50' : ''}`}
-                onClick={() => {
-                  if (!hasUserReviewed) {
-                    setShowReviewForm(true);
-                  } else {
-                    toast.info('আপনি ইতিমধ্যেই রিভিউ দিয়েছেন');
-                  }
-                }}
-                data-tooltip-id="review-tooltip"
-                data-tooltip-content={hasUserReviewed ? 'আপনি ইতিমধ্যেই রিভিউ দিয়েছেন' : ''}
-                aria-disabled={hasUserReviewed}
-                tabIndex={hasUserReviewed ? -1 : 0}
+            <h3
+              id="modal-title"
+              className="text-xl font-semibold text-base-content mb-3"
+            >
+              {modal.recommendationTitle}
+            </h3>
+            <p className="text-base-content mb-2">
+              <strong>Product: </strong> {modal.productName}
+            </p>
+            <p className="mb-2">
+              <strong>Query: </strong>{' '}
+              <Link
+                to={`/query-details/${modal.queryId}`}
+                className="link link-primary"
               >
-                রিভিউ দিন
-              </button>
-              <Tooltip id="review-tooltip" />
+                {modal.queryTitle}
+              </Link>
+            </p>
+            <p className="whitespace-pre-line text-base-content mb-3">{modal.recommendationReason}</p>
+            <p className="text-xs text-gray-500 mb-4">
+              By {modal.recommenderName} · {new Date(modal.timestamp).toLocaleString()}
+            </p>
 
+            <button
+              id="review-btn"
+              className={`btn btn-success btn-sm w-full ${
+                hasUserReviewed ? 'cursor-not-allowed opacity-50' : ''
+              }`}
+              onClick={() => {
+                if (!hasUserReviewed) {
+                  setShowReviewForm(true);
+                } else {
+                  toast.info('আপনি ইতিমধ্যেই রিভিউ দিয়েছেন');
+                }
+              }}
+              data-tooltip-id="review-tooltip"
+              data-tooltip-content={hasUserReviewed ? 'আপনি ইতিমধ্যেই রিভিউ দিয়েছেন' : ''}
+              aria-disabled={hasUserReviewed}
+              tabIndex={hasUserReviewed ? -1 : 0}
+            >
+              রিভিউ দিন
+            </button>
+            <Tooltip id="review-tooltip" />
 
-
-              {showReviewForm && !hasUserReviewed && (
-                <div className="space-y-3 border-t pt-4">
-                  <div className="rating gap-1 flex justify-center">
-                    {[1, 2, 3, 4, 5].map(num => (
-                      <input
-                        key={num}
-                        type="radio"
-                        name="rating"
-                        className={`mask mask-heart ${getColorClass(num)}`}
-                        aria-label={`${num} star`}
-                        value={num}
-                        checked={Number(rating) === num}
-                        onChange={() => setRating(num)}
-                      />
-                    ))}
-                  </div>
-                  <textarea
-                    value={reviewText}
-                    onChange={e => setReviewText(e.target.value)}
-                    className="textarea textarea-bordered w-full"
-                    placeholder="আপনার রিভিউ লিখুন"
-                  ></textarea>
-                  <button className="btn btn-primary w-full" onClick={handleSubmitReview} disabled={isSubmitting}>
-                    {isSubmitting ? 'পাঠানো হচ্ছে...' : 'সাবমিট রিভিউ'}
-                  </button>
-                </div>
-              )}
-
-              {reviews.length > 0 && (
-                <div className="border-t mt-4 pt-3 space-y-2">
-                  <h4 className="font-semibold">রিভিউসমূহ:</h4>
-
-                  {reviews.map((r, i) => (
-                    <div key={i} className="bg-gray-50 border rounded-lg p-4 ">
-                      <div className="flex gap-3 items-center relative">
-                        <img
-                          src={r.userPhoto || 'https://i.ibb.co/t4C8Fhg/default-user.png'}
-                          alt={r.userName}
-                          className="w-10 h-10 rounded-full border object-cover"
-                        />
-
-                        <div className="flex-1">
-                          <h5 className="text-sm mt-1 font-medium">{r.userName}</h5>
-                          <div className="flex items-center gap-1 mt-1">
-                            {[...Array(5)].map((_, i) => (
-                              <span key={i} className={i < r.rating ? 'text-yellow-400' : 'text-gray-300'}>
-                                ★
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-
-                        <span className="text-xs text-gray-500 absolute right-2 top-2">
-                          {new Date(r.createdAt).toLocaleDateString()}
-                        </span>
-                      </div>
-                      <p className="text-sm mt-2 text-gray-700 whitespace-pre-line">{r.comment}</p>
-                    </div>
+            {showReviewForm && !hasUserReviewed && (
+              <div className="space-y-3 border-t pt-4">
+                <div className="rating gap-1 flex justify-center">
+                  {[1, 2, 3, 4, 5].map(num => (
+                    <input
+                      key={num}
+                      type="radio"
+                      name="rating"
+                      className={`mask mask-heart cursor-pointer ${getColorClass(num)}`}
+                      aria-label={`${num} star`}
+                      value={num}
+                      checked={Number(rating) === num}
+                      onChange={() => setRating(num)}
+                    />
                   ))}
                 </div>
-              )}
-            </div>
+                <textarea
+                  value={reviewText}
+                  onChange={e => setReviewText(e.target.value)}
+                  className="textarea textarea-bordered w-full resize-none"
+                  placeholder="আপনার রিভিউ লিখুন"
+                  rows={4}
+                ></textarea>
+                <button
+                  className="btn btn-primary w-full"
+                  onClick={handleSubmitReview}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'পাঠানো হচ্ছে...' : 'সাবমিট রিভিউ'}
+                </button>
+              </div>
+            )}
+
+            {reviews.length > 0 && (
+              <div className="border-t mt-6 pt-4 space-y-4 max-h-72 overflow-y-auto">
+                <h4 className="font-semibold text-base-content">রিভিউসমূহ:</h4>
+
+                {reviews.map((r, i) => (
+                  <div
+                    key={i}
+                    className="bg-base-200 border border-base-300 rounded-lg p-4 flex flex-col"
+                  >
+                    <div className="flex gap-3 items-center relative">
+                      <img
+                        src={r.reviewerPhoto || 'https://i.ibb.co/t4C8Fhg/default-user.png'}
+                        alt={r.reviewerName}
+                        className="w-10 h-10 rounded-full border object-cover"
+                      />
+
+                      <div className="flex-1">
+                        <h5 className="text-sm mt-1 font-medium text-base-content">
+                          {r.reviewerName}
+                        </h5>
+                        <div className="flex items-center gap-1 mt-1">
+                          {[...Array(5)].map((_, i) => (
+                            <span
+                              key={i}
+                              className={
+                                i < r.rating ? 'text-yellow-400' : 'text-gray-400'
+                              }
+                            >
+                              ★
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      <span className="text-xs text-gray-400 absolute right-2 top-2">
+                        {new Date(r.createdAt).toLocaleDateString()}
+                      </span>
+                    </div>
+                    <p className="text-sm mt-2 text-base-content whitespace-pre-line">
+                      {r.reviewText}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}
