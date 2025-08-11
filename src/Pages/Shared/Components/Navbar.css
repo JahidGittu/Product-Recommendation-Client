@@ -1,21 +1,31 @@
-a{
+a {
   color: inherit;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a:focus-visible {
+  outline: 2px solid greenyellow;
+  outline-offset: 2px;
 }
 
 a.active {
   position: relative;
-  color: inherit; /* optional */
-  text-decoration: none; /* optional */
 }
 
 a.active::after {
   content: '';
   position: absolute;
   left: 50%;
-  bottom: -4px; /* distance from text */
+  bottom: -5px;
   transform: translateX(-50%);
-  width: 7px;
-  height: 7px;
+  width: 8px;
+  height: 8px;
   background-color: greenyellow;
   border-radius: 50%;
+  transition: background-color 0.3s ease;
 }

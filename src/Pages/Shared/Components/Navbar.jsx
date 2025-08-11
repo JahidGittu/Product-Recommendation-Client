@@ -5,31 +5,26 @@ import { FaSignOutAlt } from "react-icons/fa";
 import { AiFillSun, AiFillMoon } from "react-icons/ai";
 import useAuth from "../../../hooks/useAuth";
 import "./Navbar.css";
+import "../../../index.css";
 
 const Navbar = () => {
   const { user, logout, loading } = useAuth();
   const [showSetting, setShowSetting] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [theme, setTheme] = useState("mytheme"); // Start with "mytheme" as default
+  const dropdownRef = useRef(null);
+  const navigate = useNavigate();
 
+  // Handle scroll for navbar background & shadow
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 15) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 5);
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navigate = useNavigate();
-
-  const [theme, setTheme] = useState("light");
-
-  const dropdownRef = useRef(null);
-
+  // Load saved theme from localStorage or set default
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme) {
@@ -37,10 +32,24 @@ const Navbar = () => {
       setTheme(savedTheme);
     } else {
       document.documentElement.setAttribute("data-theme", "mytheme");
-      setTheme("light");
+      setTheme("mytheme");
     }
   }, []);
 
+  // Toggle between 'mytheme' (light) and 'dark'
+  const toggleTheme = () => {
+    if (theme === "mytheme") {
+      document.documentElement.setAttribute("data-theme", "dark");
+      setTheme("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.setAttribute("data-theme", "mytheme");
+      setTheme("mytheme");
+      localStorage.setItem("theme", "mytheme");
+    }
+  };
+
+  // Close dropdown if click outside
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -57,53 +66,57 @@ const Navbar = () => {
     };
   }, [showSetting]);
 
+  // Close dropdown on ESC key press
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
-      document.documentElement.classList.add("dark");
-      setTheme("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-      setTheme("light");
+    function handleKeyDown(e) {
+      if (e.key === "Escape") {
+        setShowSetting(false);
+      }
     }
-  }, []);
+    if (showSetting) {
+      document.addEventListener("keydown", handleKeyDown);
+    }
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [showSetting]);
 
-  const toggleTheme = () => {
-    if (theme === "light") {
-      document.documentElement.classList.add("dark");
-      setTheme("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-      setTheme("light");
-      localStorage.setItem("theme", "light");
+  // Keyboard accessibility for profile toggle
+  const handleProfileKeyDown = (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      setShowSetting((prev) => !prev);
     }
   };
 
+  // Navigation links, active class applied dynamically
+  const navLinkClass = ({ isActive }) =>
+    "menu-item " + (isActive ? "active" : "");
+
   const links = user ? (
     <>
-      <NavLink to="/" className="menu-item ">
+      <NavLink to="/" className={navLinkClass} end>
         Home
       </NavLink>
-      <NavLink to="/queries" className="menu-item ">
+      <NavLink to="/queries" className={navLinkClass}>
         Queries
       </NavLink>
-      <NavLink to="/Recommendation-for-me" className="menu-item ">
+      <NavLink to="/Recommendation-for-me" className={navLinkClass}>
         Recommendations For Me
       </NavLink>
-      <NavLink to="/my-Queries" className="menu-item ">
+      <NavLink to="/my-Queries" className={navLinkClass}>
         My Queries
       </NavLink>
-      <NavLink to="/my-recommendations" className="menu-item ">
+      <NavLink to="/my-recommendations" className={navLinkClass}>
         My Recommendations
       </NavLink>
     </>
   ) : (
     <>
-      <NavLink to="/" className="menu-item ">
+      <NavLink to="/" className={navLinkClass} end>
         Home
       </NavLink>
-      <NavLink to="/queries" className="menu-item ">
+      <NavLink to="/queries" className={navLinkClass}>
         Queries
       </NavLink>
     </>
@@ -114,20 +127,18 @@ const Navbar = () => {
       .then(() => {
         navigate("/");
       })
-      .catch((error) => {
-        // console.error(error)
+      .catch(() => {
+        // Handle error if needed
       });
   };
 
   return (
-    <div
-      className={`fixed z-10 top-0 left-0 right-0 transition-all duration-300 
-    ${
-      isScrolled
-        ? "bg-white/80 md:bg-base-100 shadow-md backdrop-blur-sm"
-        : "bg-transparent shadow-none"
-    } 
-    px-4 md:px-8 flex items-center justify-between`}
+    <nav
+      className={`fixed z-10 top-0 left-0 right-0 transition-all duration-300 ${
+        isScrolled ? "bg-base-100 shadow-md backdrop-blur-sm" : "bg-transparent"
+      } px-4 md:px-8 flex items-center justify-between`}
+      role="navigation"
+      aria-label="Main Navigation"
     >
       {/* Left Side: Logo + Title */}
       <div className="flex items-center gap-4 relative w-full lg:w-auto">
@@ -146,9 +157,12 @@ const Navbar = () => {
           </label>
           <ul
             tabIndex={0}
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box mt-3 w-52 p-2 shadow"
+            className="menu menu-sm dropdown-content bg-base-100 rounded-box mt-3 w-52 p-2 shadow text-base-content"
+            role="menu"
           >
-            {links}
+            {React.Children.map(links, (child) =>
+              React.cloneElement(child, { role: "menuitem" })
+            )}
           </ul>
         </div>
 
@@ -159,23 +173,28 @@ const Navbar = () => {
             src={logo}
             alt="Logo"
           />
-          <div className="text-xl py-2 text-violet-500 hover:text-violet-700 duration-300 font-semibold flex flex-col items-center">
-            <span className="text-black dark:text-white">Recommand</span>
-            <span className="text-blue-500">Product</span>
+          <div className="text-xl py-2 font-semibold flex flex-col items-center">
+            <span className="text-base-content">Recommand</span>
+            <span className="text-primary">Product</span>
           </div>
         </Link>
 
         {/* Centered Title (mobile only) */}
         <div className="lg:hidden ml-12 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center text-sm xs:text-base sm:text-lg font-semibold">
-          <span className="text-white block leading-4">Recommand</span>
-          <span className="text-blue-500 block leading-4">Product</span>
+          <span className="text-base-content block leading-4">Recommand</span>
+          <span className="text-primary block leading-4">Product</span>
         </div>
       </div>
 
       {/* Center Menu (for large screens only) */}
       <div className="hidden lg:flex flex-1 justify-center overflow-x-auto max-w-full">
-        <ul className="menu menu-horizontal gap-4 flex-nowrap whitespace-nowrap dark:*:text-white *:hover:underline px-1 text-lg gap-2">
-          {links}
+        <ul
+          className="menu menu-horizontal gap-4 flex-nowrap whitespace-nowrap px-1 text-lg gap-2 text-base-content"
+          role="menubar"
+        >
+          {React.Children.map(links, (child) =>
+            React.cloneElement(child, { role: "menuitem" })
+          )}
         </ul>
       </div>
 
@@ -185,10 +204,11 @@ const Navbar = () => {
         <button
           onClick={toggleTheme}
           aria-label="Toggle Dark/Light Theme"
+          aria-pressed={theme !== "mytheme"}
           title="Toggle Dark/Light Theme"
           className="text-3xl text-yellow-500 dark:text-gray-300 focus:outline-none transition-colors duration-300"
         >
-          {theme === "light" ? (
+          {theme === "mytheme" ? (
             <AiFillSun color="orange" />
           ) : (
             <AiFillMoon color="#2B4D58" />
@@ -208,29 +228,45 @@ const Navbar = () => {
             {user?.photoURL ? (
               <img
                 onClick={() => setShowSetting((prev) => !prev)}
+                onKeyDown={handleProfileKeyDown}
+                tabIndex={0}
+                role="button"
+                aria-haspopup="true"
+                aria-expanded={showSetting}
                 src={user.photoURL}
                 alt="Profile"
-                className="w-12  rounded-full border border-gray-300"
+                className="w-12 rounded-full border border-gray-300"
               />
             ) : (
               <div
                 onClick={() => setShowSetting((prev) => !prev)}
-                className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gray-400 text-white flex items-center justify-center border border-gray-300 font-bold"
+                onKeyDown={handleProfileKeyDown}
+                tabIndex={0}
+                role="button"
+                aria-haspopup="true"
+                aria-expanded={showSetting}
+                className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-neutral text-neutral-content flex items-center justify-center border border-gray-300 font-bold"
               >
                 U
               </div>
             )}
 
             {showSetting && (
-              <div className="absolute right-0 top-16 bg-gray-900 text-white shadow-md rounded p-4 z-50 w-56 border">
-                <p className="font-bold truncate">
+              <div
+                className="absolute right-0 top-16 bg-base-100 text-base-content shadow-md rounded p-4 z-50 w-56 border"
+                role="menu"
+              >
+                <p className="font-bold truncate" role="menuitem">
                   {user?.displayName || "No Name"}
                 </p>
-                <p className="truncate text-gray-50">{user?.email}</p>
+                <p className="truncate" role="menuitem">
+                  {user?.email}
+                </p>
 
                 <Link
                   to="/my-profile"
                   className="btn btn-sm btn-info mt-2 w-full flex items-center gap-2 justify-center"
+                  role="menuitem"
                 >
                   My Profile
                 </Link>
@@ -238,6 +274,7 @@ const Navbar = () => {
                 <button
                   onClick={handleLogout}
                   className="btn btn-warning btn-sm mt-3 w-full flex items-center gap-2 justify-center"
+                  role="menuitem"
                 >
                   Logout <FaSignOutAlt />
                 </button>
@@ -271,7 +308,7 @@ const Navbar = () => {
           </>
         )}
       </div>
-    </div>
+    </nav>
   );
 };
 
